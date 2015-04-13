@@ -1,6 +1,8 @@
 from pygame import *
 from math import *
 
+from Game import *
+
 class Car():
 	speed = 4
 	def __init__(self, surface):
@@ -24,21 +26,21 @@ class Car():
 	def drive(self, forward=False, backward=False, right=False, left=False):
 		if forward:
 			if right:
-				self.angle -= 1.5
+				self.angle -= 2
 				while self.angle < 0:
 					self.angle += 360
 			elif left:
-				self.angle += 1.5
+				self.angle += 2
 				while self.angle > 359:
 					self.angle -= 360
 			self.x,self.y = self.point(self.x,self.y,self.speed,self.angle+90)
 		elif backward:
 			if right:
-				self.angle += 1.5
+				self.angle += 2
 				while self.angle > 359:
 					self.angle -= 360
 			elif left:
-				self.angle -= 1.5
+				self.angle -= 2
 				while self.angle < 0:
 					self.angle += 360
 			self.x,self.y = self.point(self.x,self.y,self.speed,self.angle-90)
@@ -47,3 +49,6 @@ class Car():
 		dx = cos(radians(ang))
 		dy = sin(radians(ang))
 		return (x+dx*self.speed,y-dy*self.speed)
+
+	def collision(self):
+		Game.lostLife()

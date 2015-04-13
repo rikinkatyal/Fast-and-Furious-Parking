@@ -25,7 +25,7 @@ while running:
 			if e.key == K_0:
 				game.livesCt = 0
 
-	screen.fill((25,25,25))
+	screen.fill((145,145,145))
 	game.run()
 
 	display.flip()
