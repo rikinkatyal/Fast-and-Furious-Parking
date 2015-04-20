@@ -1,1 +1,1 @@
-res/Ambulance.png
+res/taxi.png
