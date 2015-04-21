@@ -13,13 +13,11 @@ class Game():
 		# Setup initial surface and variables
 		self.surface = surface
 		self.carImg = open("files/car.txt").read().strip()
-		self.mainCar = Car(self.surface)
-		self.mainCar.setCar(self.carImg)
+		self.mainCar = Car(self.surface, self.carImg, surface.get_width()//2,surface.get_height()//2,0)
 		mixer.music.load("res/audio/start.mp3")
 		mixer.music.play(0)
 		# mixer.music.load("res/audio/engine.mp3")
 		# mixer.music.play(-1)
-		self.mainCar.setLocation(surface.get_width()//2,surface.get_height()//2,0)
 		self.lifeCount = 5
 		self.lifeImage = image.load("res/life.png")
 
@@ -30,6 +28,10 @@ class Game():
 		self.timer = Clock(surface, 120, 1, 1)
 
 		self.wallLoc = []
+
+		self.carObsctacles = [Car(self.surface, "res/Police.png", 400, 300, 86),
+		Car(self.surface, "res/truck.png", 800,600, 0),
+		Car(self.surface, "res/car1.png", 100, 365, 103)]
 
 	def run(self):
 		self.HUD()
@@ -45,6 +47,9 @@ class Game():
 		elif True in wasd:
 			self.mainCar.drive(pressed[K_w],pressed[K_s],pressed[K_d],pressed[K_a])
 		self.mainCar.show()
+
+		for i in self.carObsctacles:
+			i.show()
 
 		# Level
 		for x in range(len(Levels.level1)):

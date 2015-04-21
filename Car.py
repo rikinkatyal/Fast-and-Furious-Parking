@@ -5,16 +5,12 @@ import Game
 
 class Car():
 	speed = 1
-	def __init__(self, surface):
+	def __init__(self, surface, picture, x, y, angle):
 		self.surface = surface
 		self.boundRect = Rect(0,100,surface.get_width(),surface.get_height()-100)
 		self.carRect = Rect(0,0,0,0)
-
-	def setCar(self, picture):
 		self.carImage = image.load(picture)
 		self.carImageRotated = self.carImage
-
-	def setLocation(self, x, y, angle):
 		self.x = x
 		self.y = y
 		self.angle = angle
