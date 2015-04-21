@@ -14,8 +14,8 @@ class Game():
 		self.surface = surface
 		self.carImg = open("files/car.txt").read().strip()
 		self.mainCar = Car(self.surface, self.carImg, surface.get_width()//2,surface.get_height()//2,0)
-		mixer.music.load("res/audio/start.mp3")
-		mixer.music.play(0)
+		# mixer.music.load("res/audio/start.mp3")
+		# mixer.music.play(0)
 		# mixer.music.load("res/audio/engine.mp3")
 		# mixer.music.play(-1)
 		self.lifeCount = 5
@@ -32,6 +32,15 @@ class Game():
 		self.carObsctacles = [Car(self.surface, "res/Police.png", 400, 300, 86),
 		Car(self.surface, "res/truck.png", 800,600, 0),
 		Car(self.surface, "res/car1.png", 100, 365, 103)]
+
+		# Level
+		for x in range(len(Levels.level1)):
+			for y in range(len(Levels.level1[x])):
+				if Levels.level1[x][y] == 1:
+					self.wallLoc.append((y*16,x*16+100))
+
+		self.wall_y = image.load("res/wall_y.png")
+		self.wall_b = image.load("res/wall_b.png")
 
 	def run(self):
 		self.HUD()
@@ -51,12 +60,15 @@ class Game():
 		for i in self.carObsctacles:
 			i.show()
 
-		# Level
-		for x in range(len(Levels.level1)):
-			for y in range(len(Levels.level1[x])):
-				if Levels.level1[x][y] == 1:
-					draw.rect(self.surface, (0,0,255), (y*16,x*16+100,16,16))
-					self.wallLoc.append(Rect(y*16,x*16,16,16))
+		yellow = False
+		for wall in self.wallLoc:
+			if yellow:
+				self.surface.blit(self.wall_y, wall)
+				yellow = False
+			else:
+				self.surface.blit(self.wall_b, wall)
+				yellow = True
+
 
 	def HUD(self):
 		self.header = draw.rect(self.surface, (0, 197, 247), (0,0,self.surface.get_width(),100))
