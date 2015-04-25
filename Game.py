@@ -5,6 +5,7 @@ from Car import *
 from Clock import *
 from Gear import *
 import Levels
+from Wall import *
 
 mixer.init()
 
@@ -13,7 +14,7 @@ class Game():
 		# Setup initial surface and variables
 		self.surface = surface
 		self.carImg = open("files/car.txt").read().strip()
-		self.mainCar = Car(self.surface, self.carImg, surface.get_width()//2,surface.get_height()//2,0)
+		self.mainCar = Car(self.surface, self.carImg, surface.get_width()//2,surface.get_height()//2+200,0)
 		# mixer.music.load("res/audio/start.mp3")
 		# mixer.music.play(0)
 		# mixer.music.load("res/audio/engine.mp3")
@@ -21,23 +22,33 @@ class Game():
 		self.lifeCount = 5
 		self.lifeImage = image.load("res/life.png")
 
+		self.logo = image.load("res/logo.png")
+		
+		self.crash = False
+		self.crashImage = image.load("res/crash.png")
+
 		self.gear = Gear()
 
 		self.boundRect = Rect(0,100,surface.get_width(),surface.get_height()-100)
 
 		self.timer = Clock(surface, 120, 1, 1)
 
-		self.wallLoc = []
+		self.walls = []
+		self.grasses = []
 
 		self.carObsctacles = [Car(self.surface, "res/Police.png", 400, 300, 86),
-		Car(self.surface, "res/truck.png", 800,600, 0),
+		Car(self.surface, "res/taxi.png", 800,600, 0),
 		Car(self.surface, "res/car1.png", 100, 365, 103)]
+
+		self.grass = image.load("res/grass.png")
 
 		# Level
 		for x in range(len(Levels.level1)):
 			for y in range(len(Levels.level1[x])):
 				if Levels.level1[x][y] == 1:
-					self.wallLoc.append((y*16,x*16+100))
+					self.walls.append(Wall(y*16,x*16+100,self.surface))
+				elif Levels.level1[x][y] == 2:
+					self.grasses.append((y*16,x*16+100))
 
 		self.wall_y = image.load("res/wall_y.png")
 		self.wall_b = image.load("res/wall_b.png")
@@ -52,23 +63,39 @@ class Game():
 			self.gear.gearImage = image.load("res/gear_"+str(self.mainCar.speed)+".png")
 		wasd = [pressed[K_w],pressed[K_s],pressed[K_d],pressed[K_a]]
 		if True in arrows:
-			self.mainCar.drive(pressed[K_UP], pressed[K_DOWN], pressed[K_RIGHT], pressed[K_LEFT])
+			if self.crash:
+				pass
+			else:
+				self.mainCar.drive(pressed[K_UP], pressed[K_DOWN], pressed[K_RIGHT], pressed[K_LEFT])
 		elif True in wasd:
 			self.mainCar.drive(pressed[K_w],pressed[K_s],pressed[K_d],pressed[K_a])
-		self.mainCar.show()
 
 		for i in self.carObsctacles:
-			i.show()
+			i.render()
+			if i.getBoundRect().colliderect(self.mainCar.getBoundRect()):
+				self.surface.blit(self.crashImage, (self.mainCar.x,self.mainCar.y))
+				self.crash = True
+			# for g in i.outline:
+				# self.surface.set_at(g, (255,255,255))
 
 		yellow = False
-		for wall in self.wallLoc:
+		for wall in self.walls:
 			if yellow:
-				self.surface.blit(self.wall_y, wall)
+				wall.render(self.wall_y)
 				yellow = False
 			else:
-				self.surface.blit(self.wall_b, wall)
+				wall.render(self.wall_b)
 				yellow = True
+			if wall.getBoundRect().colliderect(self.mainCar.getBoundRect()):
+				self.surface.blit(self.crashImage, (self.mainCar.x,self.mainCar.y))
+				self.crash = True
+		for gr in self.grasses:
+			self.surface.blit(self.grass, gr)
 
+		for g in self.mainCar.outline:
+			self.surface.set_at((int(g[0]), int(g[1])), (255,255,255))
+
+		self.mainCar.render()
 
 	def HUD(self):
 		self.header = draw.rect(self.surface, (0, 197, 247), (0,0,self.surface.get_width(),100))
@@ -77,6 +104,7 @@ class Game():
 		for i in range(self.lifeCount):
 			self.surface.blit(self.lifeImage, (livesLocation, 34))
 			livesLocation += 37
+		self.surface.blit(self.logo, (self.surface.get_width()//2-(self.logo.get_width()//2),0))
 
 
 	def lostLife(self):
@@ -89,4 +117,4 @@ class Game():
 		self.mainCar.speed = gear
 
 	def getWall(self):
-		return self.wallLoc
+		return self.walls

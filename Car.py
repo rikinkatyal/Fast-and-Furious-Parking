@@ -7,16 +7,16 @@ class Car():
 	speed = 1
 	def __init__(self, surface, picture, x, y, angle):
 		self.surface = surface
-		self.boundRect = Rect(0,100,surface.get_width(),surface.get_height()-100)
 		self.carRect = Rect(0,0,0,0)
 		self.carImage = image.load(picture)
-		self.carImageRotated = self.carImage
+		self.carImageRotated = transform.rotozoom(self.carImage, angle, 1)
+		self.boundingRect = self.carImageRotated.get_rect()
 		self.x = x
 		self.y = y
 		self.angle = angle
+		self.outline = self.getOuter()
 
-	def show(self):
-		# draw.rect(self.surface,(0,0,0),self.carRect)
+	def render(self):
 		self.carImageRotated = transform.rotozoom(self.carImage, self.angle, 1)
 		self.boundingRect = self.carImageRotated.get_rect()
 		self.surface.blit(self.carImageRotated, (self.x-self.boundingRect[2]/2,self.y-self.boundingRect[3]/2))
@@ -46,7 +46,36 @@ class Car():
 	def point(self,x,y,size,ang):
 		dx = cos(radians(ang))
 		dy = sin(radians(ang))
-		return (x+dx*self.speed,y-dy*self.speed)
+		return (x+dx*size,y-dy*size)
 
 	def collision(self):
 		Game.lostLife()
+
+	def getOuter(self):
+		points = []
+		for x in range(1, self.carImageRotated.get_width()-1):
+			for y in range(1, self.carImageRotated.get_height()-1):
+				if self.carImageRotated.get_at((x,y))[3] >= 10 and 0 in [self.carImageRotated.get_at((x-1,y-1))[3],self.carImageRotated.get_at((x,y-1))[3],self.carImageRotated.get_at((x+1,y-1))[3],self.carImageRotated.get_at((x+1,y))[3],self.carImageRotated.get_at((x+1,y+1))[3],self.carImageRotated.get_at((x,y+1))[3],self.carImageRotated.get_at((x-1,y+1))[3],self.carImageRotated.get_at((x-1,y))[3]] or ((y == 1 or y == self.carImageRotated.get_height()-2) and self.carImageRotated.get_at((x,y))[3] >= 10):
+					points.append((x+int(self.x-self.boundingRect[2]/2),y+int(self.y-self.boundingRect[3]/2)))
+		return (points)
+
+	def getPt(self):
+		return self.outline
+
+	def getBoundRect(self):
+		return Rect(self.x-(self.carImageRotated.get_width()//2), self.y-(self.carImageRotated.get_height()//2), self.carImageRotated.get_width(), self.carImageRotated.get_height())
+
+	def xy2vect(x,y):
+		mag = hypot(x,y)
+		ang = atan2(y,x)
+		return mag, ang
+
+	def vect2xy(mag, ang):
+		return cos(ang)*mag, sin(ang)*mag
+
+	def rotatePoint(self, x, y, px, py, ang, size):
+		dx, dy = px-x, py-y
+		curAng, mag = self.xy2vect(dx,dy)
+		curAng += ang
+		dx, dy = self.vect2xy(curAng, mag)
+		return x+dx*size, y+dy*size
