@@ -63,13 +63,11 @@ class Game():
 			self.gear.gearImage = image.load("res/gear_"+str(self.mainCar.speed)+".png")
 		wasd = [pressed[K_w],pressed[K_s],pressed[K_d],pressed[K_a]]
 		if True in arrows:
-			if self.crash:
-				pass
-			else:
-				self.mainCar.drive(pressed[K_UP], pressed[K_DOWN], pressed[K_RIGHT], pressed[K_LEFT])
+			self.mainCar.drive(pressed[K_UP], pressed[K_DOWN], pressed[K_RIGHT], pressed[K_LEFT])
 		elif True in wasd:
 			self.mainCar.drive(pressed[K_w],pressed[K_s],pressed[K_d],pressed[K_a])
-
+		else:
+			self.mainCar.drive()
 		for i in self.carObsctacles:
 			i.render()
 			if i.getBoundRect().colliderect(self.mainCar.getBoundRect()):

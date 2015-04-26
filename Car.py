@@ -4,10 +4,11 @@ from math import *
 import Game
 
 class Car():
-	speed = 1
 	def __init__(self, surface, picture, x, y, angle):
 		self.surface = surface
 		self.carRect = Rect(0,0,0,0)
+		self.speed = 1
+		self.curSpeed = 0
 		self.carImage = image.load(picture)
 		self.carImageRotated = transform.rotozoom(self.carImage, angle, 1)
 		self.boundingRect = self.carImageRotated.get_rect()
@@ -15,6 +16,7 @@ class Car():
 		self.y = y
 		self.angle = angle
 		self.outline = self.getOuter()
+		self.lastDirection = ""
 
 	def render(self):
 		self.carImageRotated = transform.rotozoom(self.carImage, self.angle, 1)
@@ -24,24 +26,54 @@ class Car():
 
 	def drive(self, forward=False, backward=False, right=False, left=False):
 		if forward:
+			if self.curSpeed < self.speed:
+				self.curSpeed += 0.1
 			if right:
-				self.angle -= self.speed/2
+				self.angle -= self.curSpeed/2
 				self.angle += 360
 			elif left:
-				self.angle += self.speed/2
+				self.angle += self.curSpeed/2
 				if self.angle > 359:
 					self.angle -= 360
-			self.x,self.y = self.point(self.x,self.y,self.speed,self.angle+90)
-		elif backward:
+			self.x,self.y = self.point(self.x,self.y,self.curSpeed,self.angle+90)
+			self.lastDirection = "FORWARD"
+		if backward:
+			if self.curSpeed < self.speed:
+				self.curSpeed += 0.1
 			if right:
-				self.angle += self.speed/2
+				self.angle += self.curSpeed/2
 				if self.angle > 359:
 					self.angle -= 360
 			elif left:
-				self.angle -= self.speed/2
+				self.angle -= self.curSpeed/2
 				if self.angle < 0:
 					self.angle += 360
-			self.x,self.y = self.point(self.x,self.y,self.speed,self.angle-90)
+			self.x,self.y = self.point(self.x,self.y,self.curSpeed,self.angle-90)
+			self.lastDirection = "REVERSE"
+		else:
+			if self.curSpeed > 0:
+				self.curSpeed -= self.speed*0.01
+				if self.lastDirection == "FORWARD":
+					if right:
+						self.angle -= self.curSpeed/2
+						self.angle += 360
+					elif left:
+						self.angle += self.curSpeed/2
+						if self.angle > 359:
+							self.angle -= 360
+					self.x,self.y = self.point(self.x,self.y,self.curSpeed,self.angle+90)
+				elif self.lastDirection == "REVERSE":
+					if right:
+						self.angle += self.curSpeed/2
+						if self.angle > 359:
+							self.angle -= 360
+					elif left:
+						self.angle -= self.curSpeed/2
+						if self.angle < 0:
+							self.angle += 360
+					self.x,self.y = self.point(self.x,self.y,self.curSpeed,self.angle-90)
+
+		print(self.curSpeed)
 
 	def point(self,x,y,size,ang):
 		dx = cos(radians(ang))
