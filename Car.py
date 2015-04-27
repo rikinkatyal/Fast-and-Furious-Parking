@@ -19,6 +19,8 @@ class Car():
 		self.lastDirection = ""
 
 	def render(self):
+		if self.curSpeed < 0:
+			self.curSpeed = 0
 		self.carImageRotated = transform.rotozoom(self.carImage, self.angle, 1)
 		self.boundingRect = self.carImageRotated.get_rect()
 		self.surface.blit(self.carImageRotated, (self.x-self.boundingRect[2]/2,self.y-self.boundingRect[3]/2))
@@ -73,8 +75,6 @@ class Car():
 							self.angle += 360
 					self.x,self.y = self.point(self.x,self.y,self.curSpeed,self.angle-90)
 
-		print(self.curSpeed)
-
 	def point(self,x,y,size,ang):
 		dx = cos(radians(ang))
 		dy = sin(radians(ang))
@@ -82,6 +82,10 @@ class Car():
 
 	def collision(self):
 		Game.lostLife()
+
+	def brake(self):
+		if self.curSpeed > 0:
+			self.curSpeed -= self.speed*0.05
 
 	def getOuter(self):
 		points = []

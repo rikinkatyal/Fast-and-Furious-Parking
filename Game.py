@@ -62,7 +62,11 @@ class Game():
 		else:
 			self.gear.gearImage = image.load("res/gear_"+str(self.mainCar.speed)+".png")
 		wasd = [pressed[K_w],pressed[K_s],pressed[K_d],pressed[K_a]]
-		if True in arrows:
+		
+		if pressed[K_e]:
+			self.mainCar.brake()
+			self.mainCar.drive()
+		elif True in arrows:
 			self.mainCar.drive(pressed[K_UP], pressed[K_DOWN], pressed[K_RIGHT], pressed[K_LEFT])
 		elif True in wasd:
 			self.mainCar.drive(pressed[K_w],pressed[K_s],pressed[K_d],pressed[K_a])
@@ -71,7 +75,6 @@ class Game():
 		for i in self.carObsctacles:
 			i.render()
 			if i.getBoundRect().colliderect(self.mainCar.getBoundRect()):
-				self.surface.blit(self.crashImage, (self.mainCar.x,self.mainCar.y))
 				self.crash = True
 			# for g in i.outline:
 				# self.surface.set_at(g, (255,255,255))
@@ -85,7 +88,6 @@ class Game():
 				wall.render(self.wall_b)
 				yellow = True
 			if wall.getBoundRect().colliderect(self.mainCar.getBoundRect()):
-				self.surface.blit(self.crashImage, (self.mainCar.x,self.mainCar.y))
 				self.crash = True
 		for gr in self.grasses:
 			self.surface.blit(self.grass, gr)
@@ -94,6 +96,9 @@ class Game():
 			self.surface.set_at((int(g[0]), int(g[1])), (255,255,255))
 
 		self.mainCar.render()
+
+		# if self.crash:
+		# 	self.surface.blit(self.crashImage, (self.mainCar.x,self.mainCar.y))
 
 	def HUD(self):
 		self.header = draw.rect(self.surface, (0, 197, 247), (0,0,self.surface.get_width(),100))
