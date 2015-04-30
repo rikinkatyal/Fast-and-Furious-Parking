@@ -16,7 +16,9 @@ class Car():
 		self.y = y
 		self.angle = angle
 		self.outline = self.getOuter()
+		self.outlineRotated = self.outline
 		self.lastDirection = ""
+		self.brakeSound = mixer.Sound("res/audio/ebrake.ogg")
 
 	def render(self):
 		if self.curSpeed < 0:
@@ -25,55 +27,56 @@ class Car():
 		self.boundingRect = self.carImageRotated.get_rect()
 		self.surface.blit(self.carImageRotated, (self.x-self.boundingRect[2]/2,self.y-self.boundingRect[3]/2))
 		self.carRect = Rect(self.x-self.boundingRect[2]/2,self.y-self.boundingRect[3]/2,self.boundingRect[2],self.boundingRect[3])
+		# draw.circle(self.surface, (0,0,0), (int(self.x),int(self.y)),10)
 
 	def drive(self, forward=False, backward=False, right=False, left=False):
 		if forward:
-			if self.curSpeed < self.speed:
-				self.curSpeed += 0.1
-			if right:
-				self.angle -= self.curSpeed/2
-				self.angle += 360
-			elif left:
-				self.angle += self.curSpeed/2
-				if self.angle > 359:
-					self.angle -= 360
-			self.x,self.y = self.point(self.x,self.y,self.curSpeed,self.angle+90)
-			self.lastDirection = "FORWARD"
-		if backward:
-			if self.curSpeed < self.speed:
-				self.curSpeed += 0.1
-			if right:
-				self.angle += self.curSpeed/2
-				if self.angle > 359:
-					self.angle -= 360
-			elif left:
-				self.angle -= self.curSpeed/2
-				if self.angle < 0:
-					self.angle += 360
-			self.x,self.y = self.point(self.x,self.y,self.curSpeed,self.angle-90)
-			self.lastDirection = "REVERSE"
+			if self.lastDirection == "REVERSE" and self.curSpeed > 0:
+				self.curSpeed -= self.speed*0.05
+			else:
+				if self.curSpeed < self.speed:
+					self.curSpeed += 0.1
+				if right:
+					self.angle -= self.curSpeed/2
+				elif left:
+					self.angle += self.curSpeed/2
+				self.x,self.y = self.point(self.x,self.y,self.curSpeed,self.angle+90)
+				for pt in range(len(self.outline)):
+					self.outline[pt] = self.point(self.outline[pt][0], self.outline[pt][1], self.curSpeed, self.angle+90)
+				self.lastDirection = "FORWARD"
+		elif backward:
+			if self.lastDirection == "FORWARD" and self.curSpeed > 0:
+				self.curSpeed -= self.speed*0.05
+			else:
+				if self.curSpeed < self.speed:
+					self.curSpeed += 0.1
+				if right:
+					self.angle += self.curSpeed/2
+				elif left:
+					self.angle -= self.curSpeed/2
+				self.x,self.y = self.point(self.x,self.y,self.curSpeed,self.angle-90)
+				for pt in range(len(self.outline)):
+					self.outline[pt] = self.point(self.outline[pt][0], self.outline[pt][1], self.curSpeed, self.angle-90)
+				self.lastDirection = "REVERSE"
 		else:
 			if self.curSpeed > 0:
 				self.curSpeed -= self.speed*0.01
 				if self.lastDirection == "FORWARD":
 					if right:
 						self.angle -= self.curSpeed/2
-						self.angle += 360
 					elif left:
 						self.angle += self.curSpeed/2
-						if self.angle > 359:
-							self.angle -= 360
 					self.x,self.y = self.point(self.x,self.y,self.curSpeed,self.angle+90)
+					for pt in range(len(self.outline)):
+						self.outline[pt] = self.point(self.outline[pt][0], self.outline[pt][1], self.curSpeed, self.angle+90)
 				elif self.lastDirection == "REVERSE":
 					if right:
 						self.angle += self.curSpeed/2
-						if self.angle > 359:
-							self.angle -= 360
 					elif left:
 						self.angle -= self.curSpeed/2
-						if self.angle < 0:
-							self.angle += 360
 					self.x,self.y = self.point(self.x,self.y,self.curSpeed,self.angle-90)
+					for pt in range(len(self.outline)):
+						self.outline[pt] = self.point(self.outline[pt][0], self.outline[pt][1], self.curSpeed, self.angle-90)
 
 	def point(self,x,y,size,ang):
 		dx = cos(radians(ang))
@@ -86,12 +89,15 @@ class Car():
 	def brake(self):
 		if self.curSpeed > 0:
 			self.curSpeed -= self.speed*0.05
+			self.brakeSound.play()
+		else:
+			self.brakeSound.stop()
 
 	def getOuter(self):
 		points = []
 		for x in range(1, self.carImageRotated.get_width()-1):
 			for y in range(1, self.carImageRotated.get_height()-1):
-				if self.carImageRotated.get_at((x,y))[3] >= 10 and 0 in [self.carImageRotated.get_at((x-1,y-1))[3],self.carImageRotated.get_at((x,y-1))[3],self.carImageRotated.get_at((x+1,y-1))[3],self.carImageRotated.get_at((x+1,y))[3],self.carImageRotated.get_at((x+1,y+1))[3],self.carImageRotated.get_at((x,y+1))[3],self.carImageRotated.get_at((x-1,y+1))[3],self.carImageRotated.get_at((x-1,y))[3]] or ((y == 1 or y == self.carImageRotated.get_height()-2) and self.carImageRotated.get_at((x,y))[3] >= 10):
+				if self.carImageRotated.get_at((x,y))[3] >= 10 and 0 in [self.carImageRotated.get_at((x-1,y-1))[3],self.carImageRotated.get_at((x,y-1))[3],self.carImageRotated.get_at((x+1,y-1))[3],self.carImageRotated.get_at((x+1,y))[3],self.carImageRotated.get_at((x+1,y+1))[3],self.carImageRotated.get_at((x,y+1))[3],self.carImageRotated.get_at((x-1,y+1))[3],self.carImageRotated.get_at((x-1,y))[3]] or ((y == 1 or y == self.carImageRotated.get_height()-2) and self.carImageRotated.get_at((x,y))[3] >= 10) or ((x == 1 or x == self.carImageRotated.get_width()-2) and self.carImageRotated.get_at((x,y))[3] >= 10):
 					points.append((x+int(self.x-self.boundingRect[2]/2),y+int(self.y-self.boundingRect[3]/2)))
 		return (points)
 
@@ -101,13 +107,13 @@ class Car():
 	def getBoundRect(self):
 		return Rect(self.x-(self.carImageRotated.get_width()//2), self.y-(self.carImageRotated.get_height()//2), self.carImageRotated.get_width(), self.carImageRotated.get_height())
 
-	def xy2vect(x,y):
+	def xy2vect(self,x,y):
 		mag = hypot(x,y)
 		ang = atan2(y,x)
 		return mag, ang
 
-	def vect2xy(mag, ang):
-		return cos(ang)*mag, sin(ang)*mag
+	def vect2xy(self, mag, ang):
+		return cos(radians(ang))*mag, sin(radians(ang))*mag
 
 	def rotatePoint(self, x, y, px, py, ang, size):
 		dx, dy = px-x, py-y

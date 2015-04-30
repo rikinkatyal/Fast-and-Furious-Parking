@@ -1,1 +1,1 @@
-res/Mini_truck.png
+res/car4.png

@@ -9,7 +9,11 @@ screen = display.set_mode((1024,768))
 display.set_caption("Fast and Furious Parking")
 game = Game(screen)
 running = True
+menuScreen = False
+levelScreen = False
+gameScreen = True
 fpsfont = font.SysFont("monospace", 15)
+gameCount = 1
 
 mClock = time.Clock()
 
@@ -32,7 +36,15 @@ while running:
 				game.lifeCount = 0
 
 	screen.fill((145,145,145))
-	game.run()
+	if menuScreen:
+		pass
+	elif levelScreen:
+		pass
+	elif gameScreen:
+		if gameCount:
+			game.sTime(cTime())
+			gameCount = 0
+		game.run()
 
 	mClock.tick(72)
 
