@@ -60,7 +60,7 @@ class Game():
 
 	def sTime(self, time):
 		self.startTime = time
-		self.timer = Clock(self.surface, time, 1, 1, 5)
+		self.timer = Clock(self.surface, time, 1, 1, 120)
 
 	def run(self):
 		if self.timer.gameOver():
@@ -115,9 +115,10 @@ class Game():
 		for gr in self.grasses:
 			self.surface.blit(self.grass, gr)
 
-		for g in self.mainCar.outline:
+		# for g in self.mainCar.outline:
+		# 	self.surface.set_at((int(g[0]), int(g[1])), (255,255,255))
+		for g in self.mainCar.outlineRotated:
 			self.surface.set_at((int(g[0]), int(g[1])), (255,255,255))
-
 		self.mainCar.render()
 
 		# if self.crash:

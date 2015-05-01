@@ -34,6 +34,9 @@ while running:
 				game.shift(5)
 			if e.key == K_0:
 				game.lifeCount = 0
+			if e.key == K_r:
+				game = Game(screen)
+				gameCount = 1
 
 	screen.fill((145,145,145))
 	if menuScreen:

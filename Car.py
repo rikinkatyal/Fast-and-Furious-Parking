@@ -16,7 +16,7 @@ class Car():
 		self.y = y
 		self.angle = angle
 		self.outline = self.getOuter()
-		self.outlineRotated = self.outline
+		self.outlineRotated = self.outline[:]
 		self.lastDirection = ""
 		self.brakeSound = mixer.Sound("res/audio/ebrake.ogg")
 
@@ -43,6 +43,7 @@ class Car():
 				self.x,self.y = self.point(self.x,self.y,self.curSpeed,self.angle+90)
 				for pt in range(len(self.outline)):
 					self.outline[pt] = self.point(self.outline[pt][0], self.outline[pt][1], self.curSpeed, self.angle+90)
+					self.outlineRotated[pt] = self.rotatePoint(self.x, self.y, self.outline[pt][0], self.outline[pt][1], self.angle, 1)
 				self.lastDirection = "FORWARD"
 		elif backward:
 			if self.lastDirection == "FORWARD" and self.curSpeed > 0:
@@ -55,8 +56,9 @@ class Car():
 				elif left:
 					self.angle -= self.curSpeed/2
 				self.x,self.y = self.point(self.x,self.y,self.curSpeed,self.angle-90)
-				for pt in range(len(self.outline)):
+				for pt in range(len(self.outlineRotated)):
 					self.outline[pt] = self.point(self.outline[pt][0], self.outline[pt][1], self.curSpeed, self.angle-90)
+					self.outlineRotated[pt] = self.rotatePoint(self.x, self.y, self.outline[pt][0], self.outline[pt][1], self.angle, 1)
 				self.lastDirection = "REVERSE"
 		else:
 			if self.curSpeed > 0:
@@ -69,6 +71,7 @@ class Car():
 					self.x,self.y = self.point(self.x,self.y,self.curSpeed,self.angle+90)
 					for pt in range(len(self.outline)):
 						self.outline[pt] = self.point(self.outline[pt][0], self.outline[pt][1], self.curSpeed, self.angle+90)
+						self.outlineRotated[pt] = self.rotatePoint(self.x, self.y, self.outline[pt][0], self.outline[pt][1], self.angle, 1)
 				elif self.lastDirection == "REVERSE":
 					if right:
 						self.angle += self.curSpeed/2
@@ -77,7 +80,7 @@ class Car():
 					self.x,self.y = self.point(self.x,self.y,self.curSpeed,self.angle-90)
 					for pt in range(len(self.outline)):
 						self.outline[pt] = self.point(self.outline[pt][0], self.outline[pt][1], self.curSpeed, self.angle-90)
-
+						self.outlineRotated[pt] = self.rotatePoint(self.x, self.y, self.outline[pt][0], self.outline[pt][1], self.angle, 1)
 	def point(self,x,y,size,ang):
 		dx = cos(radians(ang))
 		dy = sin(radians(ang))
@@ -109,15 +112,15 @@ class Car():
 
 	def xy2vect(self,x,y):
 		mag = hypot(x,y)
-		ang = atan2(y,x)
+		ang = degrees(atan2(y,x))
 		return mag, ang
 
-	def vect2xy(self, mag, ang):
+	def vect2xy(self, ang, mag):
 		return cos(radians(ang))*mag, sin(radians(ang))*mag
 
 	def rotatePoint(self, x, y, px, py, ang, size):
 		dx, dy = px-x, py-y
-		curAng, mag = self.xy2vect(dx,dy)
-		curAng += ang
+		mag, curAng = self.xy2vect(dx,dy)
+		curAng -= ang
 		dx, dy = self.vect2xy(curAng, mag)
-		return x+dx*size, y+dy*size
+		return (x+dx)*size, (y+dy)*size
