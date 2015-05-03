@@ -31,6 +31,7 @@ class Game():
 		
 		self.crash = False
 		self.crashImage = image.load("res/crash.png")
+		self.crashX, self.crashY = 0,0
 
 		self.gear = Gear()
 
@@ -96,9 +97,10 @@ class Game():
 				self.mainCar.brakeSound.stop()
 		for car in self.carObsctacles:
 			if car.getBoundRect().colliderect(self.mainCar.getBoundRect()):
-				self.crash = True
-				for carOut in car.outline:
-					self.surface.set_at(carOut, (255,255,255))
+				for pt in self.mainCar.outlineRotated:
+					if (int(pt[0]),int(pt[1])) in car.outlineRotated:
+						self.crash = True
+						self.crashX, self.crashY = int(pt[0]),int(pt[1])
 			car.render()
 
 
@@ -111,18 +113,24 @@ class Game():
 				wall.render(self.wall_b)
 				yellow = True
 			if wall.getBoundRect().colliderect(self.mainCar.getBoundRect()):
-				self.crash = True
+				for pt in self.mainCar.outlineRotated:
+					if wall.getBoundRect().collidepoint(pt):
+						self.crash = True
+						self.crashX, self.crashY = int(pt[0]),int(pt[1])
 		for gr in self.grasses:
 			self.surface.blit(self.grass, gr)
 
 		# for g in self.mainCar.outline:
 		# 	self.surface.set_at((int(g[0]), int(g[1])), (255,255,255))
-		for g in self.mainCar.outlineRotated:
-			self.surface.set_at((int(g[0]), int(g[1])), (255,255,255))
+		# for g in self.mainCar.outlineRotated:
+		# 	self.surface.set_at((int(g[0]), int(g[1])), (255,255,255))
 		self.mainCar.render()
 
-		# if self.crash:
-		# 	self.surface.blit(self.crashImage, (self.mainCar.x,self.mainCar.y))
+		if self.crash:
+			self.surface.blit(self.crashImage, (self.crashX-40,self.crashY-34))
+			self.crash = False
+			self.mainCar.crashed()
+			self.lostLife()
 		if self.gameover:
 			draw.rect(self.surface, (102,204,102), (0,0,1024,768))
 

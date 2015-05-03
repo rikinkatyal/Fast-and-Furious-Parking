@@ -96,6 +96,19 @@ class Car():
 		else:
 			self.brakeSound.stop()
 
+	def crashed(self):
+		if self.lastDirection == "FORWARD":
+			self.x,self.y = self.point(self.x,self.y,5,self.angle-90)
+			for pt in range(len(self.outline)):
+				self.outline[pt] = self.point(self.outline[pt][0], self.outline[pt][1], 5, self.angle-90)
+				self.outlineRotated[pt] = self.rotatePoint(self.x, self.y, self.outline[pt][0], self.outline[pt][1], self.angle, 1)
+		elif self.lastDirection == "REVERSE":
+			self.x,self.y = self.point(self.x,self.y,5,self.angle+90)
+			for pt in range(len(self.outline)):
+				self.outline[pt] = self.point(self.outline[pt][0], self.outline[pt][1], 5, self.angle+90)
+				self.outlineRotated[pt] = self.rotatePoint(self.x, self.y, self.outline[pt][0], self.outline[pt][1], self.angle, 1)
+		self.curSpeed = 0
+
 	def getOuter(self):
 		points = []
 		for x in range(1, self.carImageRotated.get_width()-1):
