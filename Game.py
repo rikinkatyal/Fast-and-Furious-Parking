@@ -13,6 +13,14 @@ mixer.init()
 class Game():
 	def __init__(self,surface):
 		# Setup initial surface and variables
+		self.curLevel = 1
+		LevelsMap = {
+		1: Levels.level1Map
+		}
+		LevelsCar = {
+		1: [Car(surface, "res/car17.png", 400, 300, 86), Car(surface, "res/car15.png", 800,600, 0), Car(surface, "res/car1.png", 100, 365, 103)]
+		}
+
 		self.surface = surface
 		self.carImg = open("files/car.txt").read().strip()
 		self.mainCar = Car(self.surface, self.carImg, surface.get_width()//2,surface.get_height()//2+200,0)
@@ -32,6 +40,7 @@ class Game():
 		self.crash = False
 		self.crashImage = image.load("res/crash.png")
 		self.crashX, self.crashY = 0,0
+		self.crashTime = 0
 
 		self.gear = Gear()
 
@@ -40,20 +49,18 @@ class Game():
 		self.walls = []
 		self.grasses = []
 
-		self.carObsctacles = [Car(self.surface, "res/car17.png", 400, 300, 86),
-		Car(self.surface, "res/car15.png", 800,600, 0),
-		Car(self.surface, "res/car1.png", 100, 365, 103)]
+		self.carObsctacles = LevelsCar[self.curLevel]
 
 		self.grass = image.load("res/grass.png")
 
 		self.timer = Clock(surface, cTime, 1, 1, 0)
 
 		# Level
-		for x in range(len(Levels.level1Map)):
-			for y in range(len(Levels.level1Map[x])):
-				if Levels.level1Map[x][y] == 1:
+		for x in range(len(LevelsMap[self.curLevel])):
+			for y in range(len(LevelsMap[self.curLevel][x])):
+				if LevelsMap[self.curLevel][x][y] == 1:
 					self.walls.append(Wall(y*16,x*16+100,self.surface))
-				elif Levels.level1Map[x][y] == 2:
+				elif LevelsMap[self.curLevel][x][y] == 2:
 					self.grasses.append((y*16,x*16+100))
 
 		self.wall_y = image.load("res/wall_y.png")
@@ -127,10 +134,12 @@ class Game():
 		self.mainCar.render()
 
 		if self.crash:
-			self.surface.blit(self.crashImage, (self.crashX-40,self.crashY-34))
-			self.crash = False
-			self.mainCar.crashed()
-			self.lostLife()
+			if cTime() - self.crashTime > 0:
+				self.surface.blit(self.crashImage, (self.crashX-40,self.crashY-34))
+				self.crash = False
+				self.mainCar.crashed()
+				self.lostLife()
+				self.crashTime = cTime()
 		if self.gameover:
 			draw.rect(self.surface, (102,204,102), (0,0,1024,768))
 

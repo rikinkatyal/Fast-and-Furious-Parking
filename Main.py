@@ -49,7 +49,7 @@ while running:
 			gameCount = 0
 		game.run()
 
-	mClock.tick(72)
+	mClock.tick(500)
 
 	fps = fpsfont.render(str("FPS: %.4f" % mClock.get_fps()), 1, (255,255,255))
 	screen.blit(fps, (900, 10))
