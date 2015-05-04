@@ -23,7 +23,7 @@ class Game():
 
 		self.surface = surface
 		self.carImg = open("files/car.txt").read().strip()
-		self.mainCar = Car(self.surface, self.carImg, surface.get_width()//2,surface.get_height()//2+200,0)
+		self.mainCar = Car(self.surface, self.carImg, 400, 349,90)
 		mixer.music.load("res/audio/start.mp3")
 		mixer.music.play(0)
 		# mixer.music.load("res/audio/engine.mp3")
@@ -41,6 +41,7 @@ class Game():
 		self.crashImage = image.load("res/crash.png")
 		self.crashX, self.crashY = 0,0
 		self.crashTime = 0
+		self.crashObj = Game
 
 		self.gear = Gear()
 
@@ -105,9 +106,10 @@ class Game():
 		for car in self.carObsctacles:
 			if car.getBoundRect().colliderect(self.mainCar.getBoundRect()):
 				for pt in self.mainCar.outlineRotated:
-					if (int(pt[0]),int(pt[1])) in car.outlineRotated:
+					if (int(pt[0]),int(pt[1])) in car.outlineRotated and self.timeDelay:
 						self.crash = True
 						self.crashX, self.crashY = int(pt[0]),int(pt[1])
+						self.crashObj = Car
 			car.render()
 
 
@@ -121,25 +123,26 @@ class Game():
 				yellow = True
 			if wall.getBoundRect().colliderect(self.mainCar.getBoundRect()):
 				for pt in self.mainCar.outlineRotated:
-					if wall.getBoundRect().collidepoint(pt):
+					if wall.getBoundRect().collidepoint(pt) and self.timeDelay:
 						self.crash = True
 						self.crashX, self.crashY = int(pt[0]),int(pt[1])
+						self.crashObj = Wall
 		for gr in self.grasses:
 			self.surface.blit(self.grass, gr)
 
-		# for g in self.mainCar.outline:
-		# 	self.surface.set_at((int(g[0]), int(g[1])), (255,255,255))
-		# for g in self.mainCar.outlineRotated:
-		# 	self.surface.set_at((int(g[0]), int(g[1])), (255,255,255))
 		self.mainCar.render()
 
 		if self.crash:
-			if cTime() - self.crashTime > 0:
+			if cTime() - self.crashTime > 0.2:
 				self.surface.blit(self.crashImage, (self.crashX-40,self.crashY-34))
 				self.crash = False
-				self.mainCar.crashed()
+				self.mainCar.crashed(self.crashObj)
 				self.lostLife()
 				self.crashTime = cTime()
+				self.timeDelay = False
+				self.startTime = cTime()
+				mixer.music.load("res/audio/start.mp3")
+				mixer.music.play(0)
 		if self.gameover:
 			draw.rect(self.surface, (102,204,102), (0,0,1024,768))
 
