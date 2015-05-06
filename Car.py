@@ -32,7 +32,7 @@ class Car():
 	def drive(self, forward=False, backward=False, right=False, left=False):
 		if forward:
 			if self.lastDirection == "REVERSE" and self.curSpeed > 0:
-				self.curSpeed -= self.speed*0.05
+				self.curSpeed -= 0.1
 			else:
 				if self.curSpeed < self.speed:
 					self.curSpeed += 0.1
@@ -47,7 +47,7 @@ class Car():
 				self.lastDirection = "FORWARD"
 		elif backward:
 			if self.lastDirection == "FORWARD" and self.curSpeed > 0:
-				self.curSpeed -= self.speed*0.05
+				self.curSpeed -= 0.1
 			else:
 				if self.curSpeed < self.speed:
 					self.curSpeed += 0.1
@@ -96,7 +96,7 @@ class Car():
 		else:
 			self.brakeSound.stop()
 
-	def crashed(self, carObj):
+	def crashed(self, carObj, pt):
 		if self.lastDirection == "FORWARD":
 			self.lastDirection = "REVERSE"
 			# self.x,self.y = self.point(self.x,self.y,self.curSpeed,self.angle-90)
@@ -109,9 +109,9 @@ class Car():
 			# for pt in range(len(self.outline)):
 			# 	self.outline[pt] = self.point(self.outline[pt][0], self.outline[pt][1], self.curSpeed, self.angle+90)
 			# 	self.outlineRotated[pt] = self.rotatePoint(self.x, self.y, self.outline[pt][0], self.outline[pt][1], self.angle, 1)
-		self.curSpeed = self.curSpeed*0.25
-		if carObj == Car:
-			print("is car")
+		self.curSpeed = self.curSpeed*0.5
+		if isinstance(carObj, Car):
+			carObj.pushBack(pt[0], pt[1], self.x, self.y, self.angle)
 
 	def getOuter(self):
 		points = []
@@ -125,7 +125,7 @@ class Car():
 		return self.outline
 
 	def getBoundRect(self):
-		return Rect(self.x-(self.carImageRotated.get_width()//2), self.y-(self.carImageRotated.get_height()//2), self.carImageRotated.get_width(), self.carImageRotated.get_height())
+		return Rect(self.x-self.carImageRotated.get_width(), self.y-(self.carImageRotated.get_height()//2), self.carImageRotated.get_width(), self.carImageRotated.get_height())
 
 	def xy2vect(self,x,y):
 		mag = hypot(x,y)
@@ -140,7 +140,16 @@ class Car():
 		mag, curAng = self.xy2vect(dx,dy)
 		curAng -= ang
 		dx, dy = self.vect2xy(curAng, mag)
-		return (x+dx)*size, (y+dy)*size
+		return int((x+dx)*size), int((y+dy)*size)
 
 	def moveCrash(self, vel, ang, pt):
 		pass
+
+	def pushBack(self, x1, y1, x2, y2, ang):
+		draw.circle(self.surface, (255,255,255), (x1,y1), 10)
+		# draw.circle(self.surface, (255,255,255), self.rotatePoint(int(x1),int(y1),int(x2),int(y2),ang-90,1), 10)
+
+
+
+
+

@@ -18,12 +18,12 @@ class Game():
 		1: Levels.level1Map
 		}
 		LevelsCar = {
-		1: [Car(surface, "res/car17.png", 400, 300, 86), Car(surface, "res/car15.png", 800,600, 0), Car(surface, "res/car1.png", 100, 365, 103)]
+		1: [Car(surface, "res/car17.png", 400, 300, 86), Car(surface, "res/car15.png", 800,600, 0), Car(surface, "res/car1.png", 100, 365, 103), Car(surface, "res/car10.png", 100, 465, 107)]
 		}
 
 		self.surface = surface
 		self.carImg = open("files/car.txt").read().strip()
-		self.mainCar = Car(self.surface, self.carImg, 400, 349,90)
+		self.mainCar = Car(self.surface, self.carImg, surface.get_width()//2,surface.get_height()//2+200,00)
 		mixer.music.load("res/audio/start.mp3")
 		mixer.music.play(0)
 		# mixer.music.load("res/audio/engine.mp3")
@@ -109,7 +109,7 @@ class Game():
 					if (int(pt[0]),int(pt[1])) in car.outlineRotated and self.timeDelay:
 						self.crash = True
 						self.crashX, self.crashY = int(pt[0]),int(pt[1])
-						self.crashObj = Car
+						self.crashObj = car
 			car.render()
 
 
@@ -133,16 +133,15 @@ class Game():
 		self.mainCar.render()
 
 		if self.crash:
-			if cTime() - self.crashTime > 0.2:
-				self.surface.blit(self.crashImage, (self.crashX-40,self.crashY-34))
-				self.crash = False
-				self.mainCar.crashed(self.crashObj)
-				self.lostLife()
-				self.crashTime = cTime()
-				self.timeDelay = False
-				self.startTime = cTime()
-				mixer.music.load("res/audio/start.mp3")
-				mixer.music.play(0)
+			self.surface.blit(self.crashImage, (self.crashX-40,self.crashY-34))
+			self.crash = False
+			self.mainCar.crashed(self.crashObj, (self.crashX, self.crashY))
+			self.lostLife()
+			self.crashTime = cTime()
+			self.timeDelay = False
+			self.startTime = cTime()
+			mixer.music.load("res/audio/start.mp3")
+			mixer.music.play(0)
 		if self.gameover:
 			draw.rect(self.surface, (102,204,102), (0,0,1024,768))
 
