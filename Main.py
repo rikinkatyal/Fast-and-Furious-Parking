@@ -1,5 +1,6 @@
 from pygame import *
 
+from Menu import *
 from Game import *
 from time import time as cTime
 
@@ -7,11 +8,11 @@ init()
 
 screen = display.set_mode((1024,768))
 display.set_caption("Fast and Furious Parking")
-game = Game(screen)
+menu = Menu(screen)
 running = True
-menuScreen = False
+menuScreen = True
 levelScreen = False
-gameScreen = True
+gameScreen = False
 fpsfont = font.SysFont("monospace", 15)
 gameCount = 1
 																																																																																																																																																																																								
@@ -38,12 +39,16 @@ while running:
 				game = Game(screen)
 				gameCount = 1
 
-	screen.fill((145,145,145))
 	if menuScreen:
-		pass
+		menu.render()
+		if True:
+			pass
+		else:
+			game = Game(screen)
 	elif levelScreen:
 		pass
 	elif gameScreen:
+		screen.fill((145,145,145))
 		if gameCount:
 			game.sTime(cTime())
 			gameCount = 0

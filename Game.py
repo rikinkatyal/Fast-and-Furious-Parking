@@ -7,6 +7,7 @@ from Clock import *
 from Gear import *
 import Levels
 from Wall import *
+from Loading import *
 
 mixer.init()
 
@@ -55,6 +56,7 @@ class Game():
 		self.grass = image.load("res/grass.png")
 
 		self.timer = Clock(surface, cTime, 1, 1, 0)
+		# self.loading = Loading(self.surface, cTime(), 5)
 
 		# Level
 		for x in range(len(LevelsMap[self.curLevel])):
@@ -72,6 +74,8 @@ class Game():
 		self.timer = Clock(self.surface, time, 1, 1, 120)
 
 	def run(self):
+		# if self.loading.isLoading():
+		# 	self.loading.load()
 		if self.timer.gameOver():
 			self.gameover = True
 			print("GAME OVER")
