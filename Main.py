@@ -15,7 +15,7 @@ levelScreen = False
 gameScreen = False
 fpsfont = font.SysFont("monospace", 15)
 gameCount = 1
-																																																																																																																																																																																								
+# game = Game(screen)																																																																																																																																																																																								
 mClock = time.Clock()
 
 while running:
@@ -41,10 +41,12 @@ while running:
 
 	if menuScreen:
 		menu.render()
-		if True:
+		if menu.isRunning():
 			pass
 		else:
 			game = Game(screen)
+			gameScreen = True
+			menuScreen = False
 	elif levelScreen:
 		pass
 	elif gameScreen:
