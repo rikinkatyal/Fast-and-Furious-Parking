@@ -11,6 +11,8 @@ class Menu():
 		self.height = self.carImageSized.get_height()
 		self.logo = image.load("res/logo_perspective.png")
 		self.running = True
+		self.rightMenu = image.load("res/menu_right.png")
+		self.rightMenuX, self.rightMenuY = 1024, 768
 
 	def render(self):
 		self.pressed = key.get_pressed()
@@ -27,6 +29,11 @@ class Menu():
 		else:
 			if self.pressed[K_SPACE]:
 				self.running = False
+			self.surface.blit(self.rightMenu, (self.rightMenuX, self.rightMenuY))
+			if self.rightMenuX >= 540:
+				self.rightMenuX -= 20
+			if self.rightMenuY >= 280:
+				self.rightMenuY -= 20
 
 	def isRunning(self):
 		return self.running

@@ -108,6 +108,8 @@ class Game():
 				self.mainCar.drive()
 				self.mainCar.brakeSound.stop()
 		for car in self.carObsctacles:
+			for pt in car.outlineRotated:
+				self.surface.set_at((int(pt[0]),int(pt[1])), (255,255,255))
 			if car.getBoundRect().colliderect(self.mainCar.getBoundRect()):
 				for pt in self.mainCar.outlineRotated:
 					if (int(pt[0]),int(pt[1])) in car.outlineRotated and self.timeDelay:

@@ -14,6 +14,7 @@ menuScreen = True
 levelScreen = False
 gameScreen = False
 fpsfont = font.SysFont("monospace", 15)
+road = image.load("res/road_texture.png")
 gameCount = 1
 # game = Game(screen)																																																																																																																																																																																								
 mClock = time.Clock()
@@ -50,7 +51,7 @@ while running:
 	elif levelScreen:
 		pass
 	elif gameScreen:
-		screen.fill((145,145,145))
+		screen.fill((140,140,140))
 		if gameCount:
 			game.sTime(cTime())
 			gameCount = 0
