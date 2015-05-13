@@ -1,6 +1,7 @@
 from pygame import *
 
 class Menu():
+	init()
 	def __init__(self, surface):
 		self.surface = surface
 		self.bg = transform.scale(image.load("res/main_bg.jpg"), (surface.get_width(), surface.get_height()))
@@ -13,8 +14,25 @@ class Menu():
 		self.running = True
 		self.rightMenu = image.load("res/menu_right.png")
 		self.rightMenuX, self.rightMenuY = 1024, 768
+		self.menuFont = font.Font("res/fonts/pricedown.ttf", 35)
+		self.optionColors = {
+		0:(255,255,255),
+		1:(255,255,255),
+		2:(255,255,255),
+		3:(255,255,255)
+		}
+		self.optionRects = {
+		0:Rect(825,465,self.menuFont.size("Start Game")[0]+10,self.menuFont.size("Start Game")[1]),
+		1:Rect(825,515,self.menuFont.size("Options")[0]+10,self.menuFont.size("Options")[1]),
+		2:Rect(825,565,self.menuFont.size("Help")[0]+10,self.menuFont.size("Help")[1]),
+		3:Rect(825,615,self.menuFont.size("About")[0]+10,self.menuFont.size("About")[1])
+		}
+		self.options = ["Start Game", "Options", "Help", "About"]
+		self.optionResults = []
 
 	def render(self):
+		mx, my = mouse.get_pos()
+		mb = mouse.get_pressed()
 		self.pressed = key.get_pressed()
 		self.surface.blit(self.bg, (0,0))
 		self.width += 16
@@ -30,10 +48,22 @@ class Menu():
 			if self.pressed[K_SPACE]:
 				self.running = False
 			self.surface.blit(self.rightMenu, (self.rightMenuX, self.rightMenuY))
-			if self.rightMenuX >= 540:
-				self.rightMenuX -= 20
-			if self.rightMenuY >= 280:
-				self.rightMenuY -= 20
+			if self.rightMenuX >= 590:
+				self.rightMenuX -= 30
+			if self.rightMenuY >= 350:
+				self.rightMenuY -= 30
+			if self.rightMenuX <= 590 and self.rightMenuY <= 350:
+				for r in range(len(self.optionRects)):
+					# draw.rect(self.surface, (255,255,0), self.optionRects[r])
+					if self.optionRects[r].collidepoint((mx,my)):
+						self.optionColors[r] = (0,0,0)
+						if mb[0]:
+							if r == 0:
+								self.running = False
+					else:
+						self.optionColors[r] = (255,255,255)
+					self.surface.blit(self.menuFont.render(self.options[r], 1, self.optionColors[r]), (830, 460+(r*50)))
+				# self.surface.blit(self.menuFont.render("Start Game", 1, (255,255,255)), (780,370))
 
 	def isRunning(self):
 		return self.running

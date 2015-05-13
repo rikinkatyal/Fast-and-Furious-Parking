@@ -9,11 +9,11 @@ class Clock():
 		self.time = time
 		self.timer = timer+1
 		self.x, self.y = x,y
-		self.timeFont = font.SysFont("arial", 50)
+		self.timeFont = font.Font("res/fonts/pricedown.ttf", 80)
 		self.timeLeft = timer
 
 	def render(self):
-		self.surface.blit(self.timeFont.render(strftime('%M:%S', gmtime(int(self.timer-(cTime()-self.time))))[1:], 1, (255,255,255)), (200,25))
+		self.surface.blit(self.timeFont.render(strftime('%M:%S', gmtime(int(self.timer-(cTime()-self.time))))[1:], 1, (255,255,255)), (170,0))
 		self.timeLeft = self.timer-(cTime()-self.time)
 
 	def gameOver(self):
