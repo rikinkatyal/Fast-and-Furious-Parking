@@ -32,7 +32,7 @@ class Car():
 	def drive(self, forward=False, backward=False, right=False, left=False):
 		if forward:
 			if self.lastDirection == "REVERSE" and self.curSpeed > 0:
-				self.curSpeed -= 0.1
+				self.curSpeed -= 0.25
 			else:
 				if self.curSpeed < self.speed:
 					self.curSpeed += 0.1
@@ -47,7 +47,7 @@ class Car():
 				self.lastDirection = "FORWARD"
 		elif backward:
 			if self.lastDirection == "FORWARD" and self.curSpeed > 0:
-				self.curSpeed -= 0.1
+				self.curSpeed -= 0.25
 			else:
 				if self.curSpeed < self.speed:
 					self.curSpeed += 0.1
@@ -62,7 +62,7 @@ class Car():
 				self.lastDirection = "REVERSE"
 		else:
 			if self.curSpeed > 0:
-				self.curSpeed -= self.speed*0.01
+				self.curSpeed -= self.speed*0.025
 				if self.lastDirection == "FORWARD":
 					if right:
 						self.angle -= self.curSpeed/2
@@ -109,9 +109,12 @@ class Car():
 			# for pt in range(len(self.outline)):
 			# 	self.outline[pt] = self.point(self.outline[pt][0], self.outline[pt][1], self.curSpeed, self.angle+90)
 			# 	self.outlineRotated[pt] = self.rotatePoint(self.x, self.y, self.outline[pt][0], self.outline[pt][1], self.angle, 1)
-		self.curSpeed = self.curSpeed*0.5
+		if self.curSpeed > 1:
+			self.curSpeed = self.curSpeed*0.5
+		else:
+			self.curSpeed = self.curSpeed*0.75
 		if isinstance(carObj, Car):
-			carObj.pushBack(pt[0], pt[1], self.x, self.y, self.angle)
+			carObj.pushBack(pt[0], pt[1], self.x, self.y, self.angle, self.curSpeed)
 
 	def getOuter(self):
 		points = []
@@ -145,11 +148,21 @@ class Car():
 	def moveCrash(self, vel, ang, pt):
 		pass
 
-	def pushBack(self, x1, y1, x2, y2, ang):
-		draw.circle(self.surface, (255,255,255), (x1,y1), 10)
-		# draw.circle(self.surface, (255,255,255), self.rotatePoint(int(x1),int(y1),int(x2),int(y2),ang-90,1), 10)
-
-
-
-
-
+	def pushBack(self, x1, y1, x2, y2, ang, vel):
+		# rotPoint = self.rotatePoint(self.x, self.y, x1, y1, -self.angle, 1)
+		# if rotPoint[0] in range(self.x-self.carImage.get_width()//2,self.x-self.carImage.get_width()//2+5):
+		# 	opposite = self.rotatePoint(self.x, self.y, rotPoint[0]+self.carImage.get_width(), rotPoint[1], self.angle, 1)
+		# elif rotPoint[0] in range(self.x+self.carImage.get_width()//2,self.x+self.carImage.get_width()//2+5):
+		# 	opposite = self.rotatePoint(self.x, self.y, rotPoint[0]-self.carImage.get_width(), rotPoint[1], self.angle, 1)
+		# elif rotPoint[1] in range(self.y-self.carImage.get_height()//2,self.y+self.carImage.get_height()//2+5):
+		# 	opposite = self.rotatePoint(self.x, self.y, rotPoint[0], rotPoint[1]-self.carImage.get_height(), self.angle, 1)
+		# else:
+		# 	opposite = self.rotatePoint(self.x, self.y, rotPoint[0], rotPoint[1]+self.carImage.get_height(), self.angle, 1)
+		# opposite = self.point(int(opposite[0]), opposite[1], vel*2, self.angle)
+		# # self.x, self.y = opposite
+		# draw.circle(self.surface, (255,0,0), (self.x, self.y), 10)
+		# draw.circle(self.surface, (255,0,0), (self.x, self.y), 10)
+		# self.crash = True
+		# display.flip()
+		# time.wait(1000)
+		pass

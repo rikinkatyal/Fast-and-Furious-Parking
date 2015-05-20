@@ -14,12 +14,12 @@ mixer.init()
 class Game():
 	def __init__(self,surface):
 		# Setup initial surface and variables
-		self.curLevel = 1
+		self.curLevel = int(open("files/selected_level.txt").read())
 		LevelsMap = {
 		1: Levels.level1Map
 		}
 		LevelsCar = {
-		1: [Car(surface, "res/car17.png", 400, 300, 86), Car(surface, "res/car15.png", 800,600, 0), Car(surface, "res/car1.png", 100, 365, 103), Car(surface, "res/car10.png", 100, 465, 107)]
+		1: [Car(surface, "res/car17.png", 400, 300, 86), Car(surface, "res/car12.png", 800,600, 0), Car(surface, "res/car1.png", 100, 365, 100), Car(surface, "res/car10.png", 100, 465, 107)]
 		}
 
 		self.surface = surface
@@ -56,6 +56,9 @@ class Game():
 		self.grass = image.load("res/grass.png")
 
 		self.timer = Clock(surface, cTime, 1, 1, 0)
+
+		self.pauseButton = image.load("res/pause.png")
+		self.pauseRect = Rect(940,18,64,64)
 		# self.loading = Loading(self.surface, cTime(), 5)
 
 		# Level
@@ -76,6 +79,8 @@ class Game():
 	def run(self):
 		# if self.loading.isLoading():
 		# 	self.loading.load()
+		self.mx, self.my = mouse.get_pos()
+		self.mb = mouse.get_pressed()
 		if self.timer.gameOver():
 			self.gameover = True
 			print("GAME OVER")
@@ -107,10 +112,14 @@ class Game():
 			else:
 				self.mainCar.drive()
 				self.mainCar.brakeSound.stop()
+		# draw.rect(self.surface, (0,255,0), (self.mainCar.x-self.mainCar.boundingRect[2]/2,self.mainCar.y-self.mainCar.boundingRect[3]/2, self.mainCar.carImageRotated.get_rect()[2], self.mainCar.carImageRotated.get_rect()[3]))
 		for car in self.carObsctacles:
+			# draw.rect(self.surface, (0,255,0), (car.x-car.boundingRect[2]/2,car.y-car.boundingRect[3]/2, car.boundingRect[2], car.boundingRect[3]))
 			# for pt in car.outlineRotated:
-				# self.surface.set_at((int(pt[0]),int(pt[1])), (255,255,255))
-			if car.getBoundRect().colliderect(self.mainCar.getBoundRect()):
+			# 	self.surface.set_at((int(pt[0]),int(pt[1])), (255,255,255))
+			# for pt in self.mainCar.outlineRotated:
+			# 	self.surface.set_at((int(pt[0]),int(pt[1])), (255,255,255))
+			if Rect((car.x-car.boundingRect[2]/2,car.y-car.boundingRect[3]/2, car.boundingRect[2], car.boundingRect[3])).colliderect((self.mainCar.x-self.mainCar.boundingRect[2]/2,self.mainCar.y-self.mainCar.boundingRect[3]/2, self.mainCar.carImageRotated.get_rect()[2], self.mainCar.carImageRotated.get_rect()[3])):
 				for pt in self.mainCar.outlineRotated:
 					if (int(pt[0]),int(pt[1])) in car.outlineRotated and self.timeDelay:
 						self.crash = True
@@ -146,21 +155,25 @@ class Game():
 			self.crashTime = cTime()
 			self.timeDelay = False
 			self.startTime = cTime()
-			mixer.music.load("res/audio/start.mp3")
-			mixer.music.play(0)
+			if self.lifeCount > 0:
+				mixer.music.load("res/audio/start.mp3")
+				mixer.music.play(0)
 		if self.gameover:
 			draw.rect(self.surface, (102,204,102), (0,0,1024,768))
 
 	def HUD(self):
-		self.header = draw.rect(self.surface, (0, 197, 247), (0,0,self.surface.get_width(),100))
+		self.header = draw.rect(self.surface, (51, 153, 255), (0,0,self.surface.get_width(),100))
 		self.surface.blit(self.gear.gearImage, (0,0))
-		livesLocation = 800
+		livesLocation = 750
 		for i in range(self.lifeCount):
 			self.surface.blit(self.lifeImage, (livesLocation, 34))
 			livesLocation += 37
 		self.surface.blit(self.logo, (self.surface.get_width()//2-(self.logo.get_width()//2),0))
 		if not self.gameover:
 			self.timer.render()
+		self.surface.blit(self.pauseButton, (940,18))
+		if self.pauseRect.collidepoint((self.mx,self.my)) and self.mb[0]:
+			self.pause()
 
 	def lostLife(self):
 		self.lifeCount -= 1
@@ -173,3 +186,6 @@ class Game():
 
 	def getWall(self):
 		return self.walls
+
+	def pause(self):
+		print("pause")

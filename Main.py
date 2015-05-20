@@ -1,6 +1,7 @@
 from pygame import *
 
 from Menu import *
+from Level import *
 from Game import *
 from time import time as cTime
 
@@ -42,14 +43,16 @@ while running:
 
 	if menuScreen:
 		menu.render()
-		if menu.isRunning():
-			pass
-		else:
-			game = Game(screen)
-			gameScreen = True
+		if not menu.isRunning():
+			level = Level(screen)
+			levelScreen = True
 			menuScreen = False
 	elif levelScreen:
-		pass
+		level.render()
+		if not level.isRunning():
+			game = Game(screen)
+			gameScreen = True
+			levelScreen = False
 	elif gameScreen:
 		screen.fill((140,140,140))
 		if gameCount:
@@ -57,7 +60,7 @@ while running:
 			gameCount = 0
 		game.run()
 
-	mClock.tick(500)
+	mClock.tick(120)
 
 	fps = fpsfont.render(str("FPS: %.4f" % mClock.get_fps()), 1, (255,255,255))
 	screen.blit(fps, (900, 10))

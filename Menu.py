@@ -15,20 +15,13 @@ class Menu():
 		self.rightMenu = image.load("res/menu_right.png")
 		self.rightMenuX, self.rightMenuY = 1024, 768
 		self.menuFont = font.Font("res/fonts/pricedown.ttf", 35)
-		self.optionColors = {
-		0:(255,255,255),
-		1:(255,255,255),
-		2:(255,255,255),
-		3:(255,255,255)
-		}
-		self.optionRects = {
-		0:Rect(825,465,self.menuFont.size("Start Game")[0]+10,self.menuFont.size("Start Game")[1]),
-		1:Rect(825,515,self.menuFont.size("Options")[0]+10,self.menuFont.size("Options")[1]),
-		2:Rect(825,565,self.menuFont.size("Help")[0]+10,self.menuFont.size("Help")[1]),
-		3:Rect(825,615,self.menuFont.size("About")[0]+10,self.menuFont.size("About")[1])
-		}
+		self.optionColors = [(255,255,255),(255,255,255),(255,255,255),(255,255,255)
+		]
+		self.optionRects = [Rect(825,465,self.menuFont.size("Start Game")[0]+10,self.menuFont.size("Start Game")[1]),Rect(825,515,self.menuFont.size("Options")[0]+10,self.menuFont.size("Options")[1]),Rect(825,565,self.menuFont.size("Help")[0]+10,self.menuFont.size("Help")[1]),Rect(825,615,self.menuFont.size("About")[0]+10,self.menuFont.size("About")[1])]
 		self.options = ["Start Game", "Options", "Help", "About"]
-		self.optionResults = []
+		self.optionResults = [self.notRunning,self.notRunning,self.notRunning,self.notRunning]
+
+		# self.notRunning()
 
 	def render(self):
 		mx, my = mouse.get_pos()
@@ -58,8 +51,7 @@ class Menu():
 					if self.optionRects[r].collidepoint((mx,my)):
 						self.optionColors[r] = (0,0,0)
 						if mb[0]:
-							if r == 0:
-								self.running = False
+							self.optionResults[r]()
 					else:
 						self.optionColors[r] = (255,255,255)
 					self.surface.blit(self.menuFont.render(self.options[r], 1, self.optionColors[r]), (830, 460+(r*50)))
@@ -67,3 +59,6 @@ class Menu():
 
 	def isRunning(self):
 		return self.running
+
+	def notRunning(self):
+		self.running = False
