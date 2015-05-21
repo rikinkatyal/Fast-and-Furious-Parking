@@ -4,7 +4,7 @@ class Menu():
 	init()
 	def __init__(self, surface):
 		self.surface = surface
-		self.bg = transform.scale(image.load("res/main_bg.jpg"), (surface.get_width(), surface.get_height()))
+		self.bg = transform.scale(image.load("res/main_bg.jpg").convert(), (surface.get_width(), surface.get_height()))
 		self.carImage = image.load("res/front_car.png")
 		self.carImageSized = transform.scale(self.carImage, (150, 100))
 		self.carX, self.carY = 437,290
@@ -15,11 +15,10 @@ class Menu():
 		self.rightMenu = image.load("res/menu_right.png")
 		self.rightMenuX, self.rightMenuY = 1024, 768
 		self.menuFont = font.Font("res/fonts/pricedown.ttf", 35)
-		self.optionColors = [(255,255,255),(255,255,255),(255,255,255),(255,255,255)
-		]
-		self.optionRects = [Rect(825,465,self.menuFont.size("Start Game")[0]+10,self.menuFont.size("Start Game")[1]),Rect(825,515,self.menuFont.size("Options")[0]+10,self.menuFont.size("Options")[1]),Rect(825,565,self.menuFont.size("Help")[0]+10,self.menuFont.size("Help")[1]),Rect(825,615,self.menuFont.size("About")[0]+10,self.menuFont.size("About")[1])]
-		self.options = ["Start Game", "Options", "Help", "About"]
-		self.optionResults = [self.notRunning,self.notRunning,self.notRunning,self.notRunning]
+		self.optionColors = [(255,255,255),(255,255,255),(255,255,255),(255,255,255),(255,255,255)]
+		self.optionRects = [Rect(825,455,self.menuFont.size("Start Game")[0]+10,self.menuFont.size("Start Game")[1]),Rect(825,505,self.menuFont.size("Store")[0]+10,self.menuFont.size("Store")[1]),Rect(825,555,self.menuFont.size("Options")[0]+10,self.menuFont.size("Options")[1]),Rect(825,605,self.menuFont.size("Help")[0]+10,self.menuFont.size("Help")[1]),Rect(825,655,self.menuFont.size("About")[0]+10,self.menuFont.size("About")[1])]
+		self.options = ["Start Game", "Store", "Options", "Help", "About"]
+		self.optionResults = [self.notRunning,self.notRunning,self.notRunning,self.notRunning,self.notRunning]
 
 		# self.notRunning()
 
@@ -46,7 +45,7 @@ class Menu():
 			if self.rightMenuY >= 350:
 				self.rightMenuY -= 30
 			if self.rightMenuX <= 590 and self.rightMenuY <= 350:
-				for r in range(len(self.optionRects)):
+				for r in range(len(self.options)):
 					# draw.rect(self.surface, (255,255,0), self.optionRects[r])
 					if self.optionRects[r].collidepoint((mx,my)):
 						self.optionColors[r] = (0,0,0)
@@ -54,7 +53,7 @@ class Menu():
 							self.optionResults[r]()
 					else:
 						self.optionColors[r] = (255,255,255)
-					self.surface.blit(self.menuFont.render(self.options[r], 1, self.optionColors[r]), (830, 460+(r*50)))
+					self.surface.blit(self.menuFont.render(self.options[r], 1, self.optionColors[r]), (830, 450+(r*50)))
 				# self.surface.blit(self.menuFont.render("Start Game", 1, (255,255,255)), (780,370))
 
 	def isRunning(self):

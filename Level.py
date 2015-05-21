@@ -1,15 +1,19 @@
 from pygame import *
 
 class Level():
+	init()
 	def __init__(self, surface):
 		self.surface = surface
-		self.bg = transform.scale(image.load("res/levels_bg.jpg"), (surface.get_width(),surface.get_height()))
+		self.bg = transform.scale(image.load("res/levels_bg.jpg").convert(), (surface.get_width(),surface.get_height()))
 		self.button = image.load("res/level_button.png")
 		self.button_hover = image.load("res/level_button_hover.png")
 		self.star = image.load("res/star.png")
 		self.stars = open("files/stars.txt").read().split("\n")
 		self.running = True
 		self.selected_level = open("files/selected_level.txt", "w")
+		self.unlocked_level = open("files/unlocked_levels.txt").read()
+		self.lock = image.load("res/locked.png")
+		self.level_font = font.Font("res/fonts/pricedown.ttf", 80)
 
 	def render(self):
 		self.surface.blit(self.bg, (0,0))
@@ -22,12 +26,13 @@ class Level():
 				level = str(i*5+j+1)
 				if Rect(x,y,100,100).collidepoint(mx,my):
 					self.surface.blit(self.button_hover, (x,y))
-					if mb[0]:
+					if mb[0] and int(self.unlocked_level) >= int(level):
 						self.running = False
 						self.selected_level.write(level)
 						self.selected_level.close()
 				else:
 					self.surface.blit(self.button, (x,y))
+				self.surface.blit(self.level_font.render(level, 1, (255,255,255)), (x+(100-font.Font.size(self.level_font, level)[0])//2,y-(100-font.Font.size(self.level_font,level)[1])//2))
 				starx = x+4
 				for s in range(int(self.stars[int(level)-1])):
 					if s == 1:
@@ -35,6 +40,8 @@ class Level():
 					else:
 						self.surface.blit(self.star, (starx, y-10))
 					starx += 30
+				if int(self.unlocked_level) < int(level):
+					self.surface.blit(self.lock, (x,y))
 				x += 140
 			y += 150
 
