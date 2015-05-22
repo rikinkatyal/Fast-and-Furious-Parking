@@ -17,11 +17,16 @@ fpsfont = font.SysFont("monospace", 15)
 road = image.load("res/road_texture.png")
 gameCount = 1
 mClock = time.Clock()
+down = False
 
 while running:
 	for e in event.get():
 		if e.type == QUIT or e.type == KEYDOWN and e.key == K_ESCAPE:
 			running = False
+		if e.type == MOUSEBUTTONDOWN:
+			down = True
+		elif e.type == MOUSEBUTTONUP:
+			down = False
 		if e.type == KEYDOWN:
 			if e.key == K_1:
 				game.shift(1)
@@ -40,7 +45,7 @@ while running:
 				gameCount = 1
 
 	if menuScreen:
-		menu.render()
+		menu.render(down)
 		if not menu.isRunning():
 			game = game(screen)
 			gameScreen = True
@@ -52,6 +57,9 @@ while running:
 			game.sTime(cTime())
 			gameCount = 0
 		game.run()
+
+	if down:
+		down = False
 
 	mClock.tick(120)
 

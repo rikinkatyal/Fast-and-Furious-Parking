@@ -27,7 +27,7 @@ class Menu():
 
 		# self.notRunning()
 
-	def render(self):
+	def render(self, down):
 		mx, my = mouse.get_pos()
 		mb = mouse.get_pressed()
 		self.pressed = key.get_pressed()
@@ -63,7 +63,7 @@ class Menu():
 						self.surface.blit(self.menuFont.render(self.options[r], 1, self.optionColors[r]), (830, 450+(r*50)))
 					# self.surface.blit(self.menuFont.render("Start Game", 1, (255,255,255)), (780,370))
 		elif self.store.isRunning():
-			self.store.render()
+			self.store.render(down)
 		elif self.level.isRunning():
 			self.level.render()
 

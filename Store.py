@@ -7,14 +7,13 @@ class Store():
 		self.bg = transform.scale(image.load("res/store_bg.jpg").convert(), (surface.get_width(),surface.get_height()))
 		self.arrow_left = image.load("res/arrow_left.png")
 		self.arrow_right = image.load("res/arrow_right.png")
-		self.cars = [image.load("res/car%s.png" % i) for i in range(1,12)]
-		self.curCar = 1
+		self.cars = [image.load("res/car%s.png" % i) for i in range(1,19)]
+		self.curCar = 0
 		self.running = False
 		self.angle = 0
 		self.x, self.y = 100,100
 
-	def render(self):
-		pressed = key.get_pressed()
+	def render(self, down):
 		self.surface.blit(self.bg, (0,0))
 		self.surface.blit(self.arrow_left, (0,0))
 		mx, my = mouse.get_pos()
@@ -23,14 +22,15 @@ class Store():
 			self.running = False
 		if self.curCar > 0:
 			self.surface.blit(self.arrow_left, (100,344))
-			if Rect(100,344,80,80).collidepoint(mx,my) and mb[0]:
+			if Rect(100,344,80,80).collidepoint(mx,my) and down:
 				self.curCar -= 1
-		if self.curCar < len(self.cars):
+		if self.curCar < len(self.cars)-1:
 			self.surface.blit(self.arrow_right, (844, 344))
-			if Rect(844,344,80,80).collidepoint(mx,my) and mb[0] or pressed[K_RIGHT]:
+			if Rect(844,344,80,80).collidepoint(mx,my) and down:
 				self.curCar += 1
-		if self.curCar > len(self.cars):
+		if self.curCar >= len(self.cars):
 			self.curCar = len(self.cars) - 1
+		print(self.curCar)
 		self.surface.blit(self.cars[self.curCar], (self.x, self.y))
 
 
