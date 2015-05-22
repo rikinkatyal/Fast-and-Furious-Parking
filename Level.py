@@ -9,16 +9,21 @@ class Level():
 		self.button_hover = image.load("res/level_button_hover.png")
 		self.star = image.load("res/star.png")
 		self.stars = open("files/stars.txt").read().split("\n")
-		self.running = True
+		self.running = False
 		self.selected_level = open("files/selected_level.txt", "w")
 		self.unlocked_level = open("files/unlocked_levels.txt").read()
 		self.lock = image.load("res/locked.png")
 		self.level_font = font.Font("res/fonts/pricedown.ttf", 80)
+		self.arrow_left = image.load("res/arrow_left.png")
 
 	def render(self):
 		self.surface.blit(self.bg, (0,0))
+		# self.surface.blit(self.tar, (125,100))
 		mx, my = mouse.get_pos()
 		mb = mouse.get_pressed()
+		self.surface.blit(self.arrow_left, (0,0))
+		if Rect(0,0,80,80).collidepoint(mx,my) and mb[0]:
+			self.running = False
 		y = 184
 		for i in range(3):
 			x = 182

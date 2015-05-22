@@ -32,7 +32,11 @@ class Game():
 		self.lifeCount = 5
 		self.lifeImage = image.load("res/life.png")
 
-		self.logo = image.load("res/logo.png")
+		self.coin_count = open("files/coins.txt").read()
+		self.coin_image = image.load("res/coin_small.png")
+		self.coin_font = font.Font("res/fonts/pricedown.ttf", 32)
+
+		self.logo = image.load("res/logo_main.png")
 		self.startTime = 0
 		self.timeDelay = False
 
@@ -168,12 +172,14 @@ class Game():
 		for i in range(self.lifeCount):
 			self.surface.blit(self.lifeImage, (livesLocation, 34))
 			livesLocation += 37
-		self.surface.blit(self.logo, (self.surface.get_width()//2-(self.logo.get_width()//2),0))
+		self.surface.blit(self.logo, (self.surface.get_width()//2-(self.logo.get_width()//2),13))
 		if not self.gameover:
 			self.timer.render()
 		self.surface.blit(self.pauseButton, (940,18))
 		if self.pauseRect.collidepoint((self.mx,self.my)) and self.mb[0]:
 			self.pause()
+		self.surface.blit(self.coin_image, (615,34))
+		self.surface.blit(self.coin_font.render(self.coin_count, 1, (255,255,255)), (650,28))
 
 	def lostLife(self):
 		self.lifeCount -= 1

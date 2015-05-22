@@ -12,12 +12,10 @@ display.set_caption("Fast and Furious Parking")
 menu = Menu(screen)
 running = True
 menuScreen = True
-levelScreen = False
 gameScreen = False
 fpsfont = font.SysFont("monospace", 15)
 road = image.load("res/road_texture.png")
 gameCount = 1
-# game = Game(screen)																																																																																																																																																																																								
 mClock = time.Clock()
 
 while running:
@@ -44,16 +42,11 @@ while running:
 	if menuScreen:
 		menu.render()
 		if not menu.isRunning():
-			level = Level(screen)
-			levelScreen = True
-			menuScreen = False
-	elif levelScreen:
-		level.render()
-		if not level.isRunning():
-			game = Game(screen)
+			game = game(screen)
 			gameScreen = True
-			levelScreen = False
+			menuScreen = False
 	elif gameScreen:
+		print("fd")
 		screen.fill((140,140,140))
 		if gameCount:
 			game.sTime(cTime())
