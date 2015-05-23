@@ -10,6 +10,7 @@ class Level():
 		self.star = image.load("res/star.png")
 		self.stars = open("files/stars.txt").read().split("\n")
 		self.running = False
+		self.choseLevel = False
 		self.selected_level = open("files/selected_level.txt", "w")
 		self.unlocked_level = open("files/unlocked_levels.txt").read()
 		self.lock = image.load("res/locked.png")
@@ -33,6 +34,7 @@ class Level():
 					self.surface.blit(self.button_hover, (x,y))
 					if mb[0] and int(self.unlocked_level) >= int(level):
 						self.running = False
+						self.choseLevel = True
 						self.selected_level.write(level)
 						self.selected_level.close()
 				else:

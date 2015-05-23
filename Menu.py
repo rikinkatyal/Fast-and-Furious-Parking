@@ -21,7 +21,7 @@ class Menu():
 		self.optionColors = [(255,255,255),(255,255,255),(255,255,255),(255,255,255),(255,255,255)]
 		self.optionRects = [Rect(825,455,self.menuFont.size("Start Game")[0]+10,self.menuFont.size("Start Game")[1]),Rect(825,505,self.menuFont.size("Store")[0]+10,self.menuFont.size("Store")[1]),Rect(825,555,self.menuFont.size("Options")[0]+10,self.menuFont.size("Options")[1]),Rect(825,605,self.menuFont.size("Help")[0]+10,self.menuFont.size("Help")[1]),Rect(825,655,self.menuFont.size("About")[0]+10,self.menuFont.size("About")[1])]
 		self.options = ["Start Game", "Store", "Options", "Help", "About"]
-		self.optionResults = [self.levelRunning,self.storeRunning,self.notRunning,self.notRunning,self.notRunning]
+		self.optionResults = [self.levelRunning,self.storeRunning,self.dead,self.dead,self.dead]
 		self.store = Store(surface)
 		self.level = Level(surface)
 
@@ -66,6 +66,8 @@ class Menu():
 			self.store.render(down)
 		elif self.level.isRunning():
 			self.level.render()
+		if self.level.choseLevel:
+			self.running = False
 
 	def isRunning(self):
 		return self.running
@@ -78,3 +80,6 @@ class Menu():
 
 	def levelRunning(self):
 		self.level.running = True
+
+	def dead(self):
+		pass

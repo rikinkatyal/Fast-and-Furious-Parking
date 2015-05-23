@@ -47,11 +47,10 @@ while running:
 	if menuScreen:
 		menu.render(down)
 		if not menu.isRunning():
-			game = game(screen)
+			game = Game(screen)
 			gameScreen = True
 			menuScreen = False
 	elif gameScreen:
-		print("fd")
 		screen.fill((140,140,140))
 		if gameCount:
 			game.sTime(cTime())
