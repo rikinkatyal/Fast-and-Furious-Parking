@@ -19,9 +19,10 @@ class Game():
 		1: Levels.level1Map
 		}
 		LevelsCar = {
-		1: [Car(surface, "res/car17.png", 400, 300, 86), Car(surface, "res/car12.png", 800,600, 0), Car(surface, "res/car1.png", 100, 365, 100), Car(surface, "res/car10.png", 100, 465, 107)]
+		# 1: [Car(surface, "res/car17.png", 400, 300, 86), Car(surface, "res/car12.png", 800,600, 0), Car(surface, "res/car1.png", 100, 365, 100), Car(surface, "res/car10.png", 100, 465, 107)]
+		1 : []
 		}
-
+		# LevelsCar = {1:Car(surface, "res/car17.png", 400, 300, 86)}
 		self.surface = surface
 		self.carImg = open("files/car.txt").read().strip()
 		self.mainCar = Car(self.surface, self.carImg, surface.get_width()//2,surface.get_height()//2+200,00)
@@ -75,6 +76,7 @@ class Game():
 
 		self.wall_y = image.load("res/wall_y.png")
 		self.wall_b = image.load("res/wall_b.png")
+		self.wall = image.load("res/wall.png")
 
 	def sTime(self, time):
 		self.startTime = time
@@ -132,14 +134,15 @@ class Game():
 			car.render()
 
 
-		yellow = False
+		# yellow = False
 		for wall in self.walls:
-			if yellow:
-				wall.render(self.wall_y)
-				yellow = False
-			else:
-				wall.render(self.wall_b)
-				yellow = True
+			# if yellow:
+			# 	wall.render(self.wall_y)
+			# 	yellow = False
+			# else:
+			# 	wall.render(self.wall_b)
+			# 	yellow = True
+			wall.render(self.wall)
 			if wall.getBoundRect().colliderect(self.mainCar.getBoundRect()):
 				for pt in self.mainCar.outlineRotated:
 					if wall.getBoundRect().collidepoint(pt) and self.timeDelay:
