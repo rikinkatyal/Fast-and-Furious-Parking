@@ -134,7 +134,7 @@ class Game():
 					if (int(pt[0]),int(pt[1])) in car.outlineRotated and self.timeDelay:
 						self.crash = True
 						self.crashX, self.crashY = int(pt[0]),int(pt[1])
-						self.crashObj = car
+					self.crashObj = car
 			car.render()
 
 		yellow = False
@@ -151,11 +151,16 @@ class Game():
 					if wall.getBoundRect().collidepoint(pt) and self.timeDelay:
 						self.crash = True
 						self.crashX, self.crashY = int(pt[0]),int(pt[1])
-						self.crashObj = Wall
+						self.crashObj = wall
 		for gr in self.grasses:
 			self.surface.blit(self.grass, gr)
-		for co in self.cones:
-			co.render()
+		for cone in self.cones:
+			for pt in self.mainCar.outlineRotated:
+				if (int(pt[0]), int(pt[1])) in cone.getOuter() and self.timeDelay:
+					self.crash = True
+					self.crashX, self.crashY = int(pt[0]),int(pt[1])
+					self.crashObj = cone
+			cone.render()
 
 		self.mainCar.render()
 
