@@ -8,6 +8,7 @@ from Gear import *
 import Levels
 from Wall import *
 from Loading import *
+from Cone import *
 
 mixer.init()
 
@@ -55,6 +56,7 @@ class Game():
 
 		self.walls = []
 		self.grasses = []
+		self.cones = []
 
 		self.carObsctacles = LevelsCar[self.curLevel]
 
@@ -73,6 +75,8 @@ class Game():
 					self.walls.append(Wall(y*16,x*16+100,self.surface))
 				elif LevelsMap[self.curLevel][x][y] == 2:
 					self.grasses.append((y*16,x*16+100))
+				elif LevelsMap[self.curLevel][x][y] == 3:
+					self.cones.append(Cone(self.surface, y*16,x*16+100))
 
 		self.wall_y = image.load("res/wall_y.png")
 		self.wall_b = image.load("res/wall_b.png")
@@ -125,7 +129,7 @@ class Game():
 			# 	self.surface.set_at((int(pt[0]),int(pt[1])), (255,255,255))
 			# for pt in self.mainCar.outlineRotated:
 			# 	self.surface.set_at((int(pt[0]),int(pt[1])), (255,255,255))
-			if Rect((car.x-car.boundingRect[2]/2,car.y-car.boundingRect[3]/2, car.boundingRect[2], car.boundingRect[3])).colliderect((self.mainCar.x-self.mainCar.boundingRect[2]/2,self.mainCar.y-self.mainCar.boundingRect[3]/2, self.mainCar.carImageRotated.get_rect()[2], self.mainCar.carImageRotated.get_rect()[3])):
+			if Rect((car.x-car.boundingRect[2]/2,car.y-car.boundingRect[3]/2, car.boundingRect[2], car.boundingRect[3])).colliderect(Rect(self.mainCar.x-self.mainCar.boundingRect[2]/2,self.mainCar.y-self.mainCar.boundingRect[3]/2, self.mainCar.carImageRotated.get_rect()[2], self.mainCar.carImageRotated.get_rect()[3])):
 				for pt in self.mainCar.outlineRotated:
 					if (int(pt[0]),int(pt[1])) in car.outlineRotated and self.timeDelay:
 						self.crash = True
@@ -133,17 +137,16 @@ class Game():
 						self.crashObj = car
 			car.render()
 
-
-		# yellow = False
+		yellow = False
 		for wall in self.walls:
-			# if yellow:
-			# 	wall.render(self.wall_y)
-			# 	yellow = False
-			# else:
-			# 	wall.render(self.wall_b)
-			# 	yellow = True
-			wall.render(self.wall)
-			if wall.getBoundRect().colliderect(self.mainCar.getBoundRect()):
+			if yellow:
+				wall.render(self.wall_y)
+				yellow = False
+			else:
+				wall.render(self.wall_b)
+				yellow = True
+			# wall.render(self.wall)
+			if wall.getBoundRect().colliderect((self.mainCar.x-self.mainCar.boundingRect[2]/2,self.mainCar.y-self.mainCar.boundingRect[3]/2, self.mainCar.carImageRotated.get_rect()[2], self.mainCar.carImageRotated.get_rect()[3])):
 				for pt in self.mainCar.outlineRotated:
 					if wall.getBoundRect().collidepoint(pt) and self.timeDelay:
 						self.crash = True
@@ -151,6 +154,8 @@ class Game():
 						self.crashObj = Wall
 		for gr in self.grasses:
 			self.surface.blit(self.grass, gr)
+		for co in self.cones:
+			co.render()
 
 		self.mainCar.render()
 
