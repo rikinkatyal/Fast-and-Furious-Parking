@@ -76,11 +76,12 @@ class Game():
 				elif LevelsMap[self.curLevel][x][y] == 2:
 					self.grasses.append((y*16,x*16+100))
 				elif LevelsMap[self.curLevel][x][y] == 3:
-					self.cones.append(Cone(self.surface, y*16,x*16+100))
+					self.cones.append(Wall(y*16,x*16+100,self.surface))
 
 		self.wall_y = image.load("res/wall_y.png")
 		self.wall_b = image.load("res/wall_b.png")
 		self.wall = image.load("res/wall.png")
+		self.coneImage = image.load("res/cone.png")
 
 	def sTime(self, time):
 		self.startTime = time
@@ -145,7 +146,6 @@ class Game():
 			else:
 				wall.render(self.wall_b)
 				yellow = True
-			# wall.render(self.wall)
 			if wall.getBoundRect().colliderect((self.mainCar.x-self.mainCar.boundingRect[2]/2,self.mainCar.y-self.mainCar.boundingRect[3]/2, self.mainCar.carImageRotated.get_rect()[2], self.mainCar.carImageRotated.get_rect()[3])):
 				for pt in self.mainCar.outlineRotated:
 					if wall.getBoundRect().collidepoint(pt) and self.timeDelay:
@@ -155,12 +155,14 @@ class Game():
 		for gr in self.grasses:
 			self.surface.blit(self.grass, gr)
 		for cone in self.cones:
-			for pt in self.mainCar.outlineRotated:
-				if (int(pt[0]), int(pt[1])) in cone.getOuter() and self.timeDelay:
-					self.crash = True
-					self.crashX, self.crashY = int(pt[0]),int(pt[1])
-					self.crashObj = cone
-			cone.render()
+			cone.render(self.coneImage)
+			if cone.getBoundRect().colliderect((self.mainCar.x-self.mainCar.boundingRect[2]/2,self.mainCar.y-self.mainCar.boundingRect[3]/2, self.mainCar.carImageRotated.get_rect()[2], self.mainCar.carImageRotated.get_rect()[3])):
+				for pt in self.mainCar.outlineRotated:
+					if cone.getBoundRect().collidepoint(pt) and self.timeDelay:
+						self.crash = True
+						self.crashX, self.crashY = int(pt[0]),int(pt[1])
+						self.crashObj = wall
+
 
 		self.mainCar.render()
 
