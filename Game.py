@@ -9,6 +9,7 @@ import Levels
 from Wall import *
 from Loading import *
 from Cone import *
+from Park import *
 
 mixer.init()
 
@@ -17,13 +18,21 @@ class Game():
 		# Setup initial surface and variables
 		self.curLevel = int(open("files/selected_level.txt").read())
 		LevelsMap = {
-		1: Levels.level1Map
+		1 : Levels.level1Map
 		}
 		LevelsCar = {
 		# 1: [Car(surface, "res/car17.png", 400, 300, 86), Car(surface, "res/car12.png", 800,600, 0), Car(surface, "res/car1.png", 100, 365, 100), Car(surface, "res/car10.png", 100, 465, 107)]
 		1 : []
 		}
+		ParkLoc = {
+		1 : Park(surface, 475, 324)
+		}
+		Times = {
+		1 : 30
+		}
 		# LevelsCar = {1:Car(surface, "res/car17.png", 400, 300, 86)}
+		self.parkSpot = ParkLoc[self.curLevel]
+		self.levelTime = Times[self.curLevel]
 		self.surface = surface
 		self.carImg = open("files/car.txt").read().strip()
 		self.mainCar = Car(self.surface, self.carImg, surface.get_width()//2,surface.get_height()//2+200,00)
@@ -85,7 +94,7 @@ class Game():
 
 	def sTime(self, time):
 		self.startTime = time
-		self.timer = Clock(self.surface, time, 1, 1, 120)
+		self.timer = Clock(self.surface, time, 1, 1, self.levelTime)
 
 	def run(self):
 		# if self.loading.isLoading():
@@ -163,8 +172,10 @@ class Game():
 						self.crashX, self.crashY = int(pt[0]),int(pt[1])
 						self.crashObj = wall
 
-
+		self.parkSpot.render()
 		self.mainCar.render()
+
+		# print(mouse.get_pos())
 
 		if self.crash:
 			self.surface.blit(self.crashImage, (self.crashX-40,self.crashY-34))
