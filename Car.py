@@ -166,3 +166,8 @@ class Car():
 		# display.flip()
 		# time.wait(1000)
 		pass
+
+	def checkPark(self, park):
+		point1 = self.rotatePoint(self.x, self.y, int(self.x), int(self.y - self.carImage.get_height()/3), self.angle, 1)
+		point2 = self.rotatePoint(self.x, self.y, int(self.x), int(self.y + self.carImage.get_height()/3), self.angle, 1)
+		return park.rect.collidepoint(point1) and park.rect.collidepoint(point2)

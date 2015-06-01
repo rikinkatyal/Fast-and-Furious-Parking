@@ -1,6 +1,7 @@
 from pygame import *
 from Level import *
 from Store import *
+from Popup import *
 
 class Menu():
 	init()
@@ -21,9 +22,11 @@ class Menu():
 		self.optionColors = [(255,255,255),(255,255,255),(255,255,255),(255,255,255),(255,255,255)]
 		self.optionRects = [Rect(825,455,self.menuFont.size("Start Game")[0]+10,self.menuFont.size("Start Game")[1]),Rect(825,505,self.menuFont.size("Store")[0]+10,self.menuFont.size("Store")[1]),Rect(825,555,self.menuFont.size("Options")[0]+10,self.menuFont.size("Options")[1]),Rect(825,605,self.menuFont.size("Help")[0]+10,self.menuFont.size("Help")[1]),Rect(825,655,self.menuFont.size("About")[0]+10,self.menuFont.size("About")[1])]
 		self.options = ["Start Game", "Store", "Options", "Help", "About"]
-		self.optionResults = [self.levelRunning,self.storeRunning,self.dead,self.dead,self.dead]
+		self.optionResults = [self.levelRunning,self.storeRunning,self.dead,self.dead,self.setAbout]
 		self.store = Store(surface)
 		self.level = Level(surface)
+		self.about = Popup(surface, "About", "Developed By Rikin Katyal ICS3U Final Project 2015 Made Using Python and Pygame")
+		self.aboutRunning = False
 
 		# self.notRunning()
 
@@ -68,6 +71,9 @@ class Menu():
 			self.level.render()
 		if self.level.choseLevel:
 			self.running = False
+		if self.aboutRunning:
+			self.about.render()
+			self.aboutRunning = self.about.isRunning()
 
 	def isRunning(self):
 		return self.running
@@ -83,3 +89,6 @@ class Menu():
 
 	def dead(self):
 		pass
+
+	def setAbout(self):
+		self.aboutRunning = True

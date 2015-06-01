@@ -1,10 +1,11 @@
 from pygame import *
 
 class Wall():
-	def __init__(self, x, y, surface):
+	def __init__(self, x, y, surface, pylon=False):
 		self.x = x
 		self.y = y
 		self.surface = surface
+		self.pylon = pylon
 
 	def render(self, wall):
 		self.surface.blit(wall, (self.x, self.y))

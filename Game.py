@@ -85,7 +85,7 @@ class Game():
 				elif LevelsMap[self.curLevel][x][y] == 2:
 					self.grasses.append((y*16,x*16+100))
 				elif LevelsMap[self.curLevel][x][y] == 3:
-					self.cones.append(Wall(y*16,x*16+100,self.surface))
+					self.cones.append(Wall(y*16,x*16+100,self.surface, True))
 
 		self.wall_y = image.load("res/wall_y.png")
 		self.wall_b = image.load("res/wall_b.png")
@@ -190,6 +190,10 @@ class Game():
 				mixer.music.play(0)
 		if self.gameover:
 			draw.rect(self.surface, (102,204,102), (0,0,1024,768))
+
+		if pressed[K_RETURN]:
+			if self.mainCar.checkPark(self.parkSpot):
+				self.surface.blit(self.coin_font.render("LEVEL COMPLETE", 1, (255,255,255)), (512,384))
 
 	def HUD(self):
 		self.header = draw.rect(self.surface, (51, 153, 255), (0,0,self.surface.get_width(),100))
