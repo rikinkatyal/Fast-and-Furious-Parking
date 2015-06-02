@@ -22,11 +22,12 @@ class Menu():
 		self.optionColors = [(255,255,255),(255,255,255),(255,255,255),(255,255,255),(255,255,255)]
 		self.optionRects = [Rect(825,455,self.menuFont.size("Start Game")[0]+10,self.menuFont.size("Start Game")[1]),Rect(825,505,self.menuFont.size("Store")[0]+10,self.menuFont.size("Store")[1]),Rect(825,555,self.menuFont.size("Options")[0]+10,self.menuFont.size("Options")[1]),Rect(825,605,self.menuFont.size("Help")[0]+10,self.menuFont.size("Help")[1]),Rect(825,655,self.menuFont.size("About")[0]+10,self.menuFont.size("About")[1])]
 		self.options = ["Start Game", "Store", "Options", "Help", "About"]
-		self.optionResults = [self.levelRunning,self.storeRunning,self.dead,self.dead,self.setAbout]
+		self.optionResults = [self.levelRunning,self.storeRunning,self.dead,self.setHelp,self.setAbout]
 		self.store = Store(surface)
 		self.level = Level(surface)
 		self.about = Popup(surface, "About", "Developed By Rikin Katyal ICS3U Final Project 2015 Made Using Python and Pygame")
 		self.aboutRunning = False
+		self.helpRunning = False
 
 		# self.notRunning()
 
@@ -47,8 +48,6 @@ class Menu():
 			if self.carY < 768:
 				self.surface.blit(self.carImageSized, (self.carX, self.carY))
 			else:
-				if self.pressed[K_SPACE]:
-					self.running = False
 				self.surface.blit(self.rightMenu, (self.rightMenuX, self.rightMenuY))
 				if self.rightMenuX >= 590:
 					self.rightMenuX -= 30
@@ -57,7 +56,7 @@ class Menu():
 				if self.rightMenuX <= 590 and self.rightMenuY <= 350:
 					for r in range(len(self.options)):
 						# draw.rect(self.surface, (255,255,0), self.optionRects[r])
-						if self.optionRects[r].collidepoint((mx,my)):
+						if self.optionRects[r].collidepoint((mx,my)) and not self.aboutRunning:
 							self.optionColors[r] = (0,0,0)
 							if mb[0]:
 								self.optionResults[r]()
@@ -92,3 +91,6 @@ class Menu():
 
 	def setAbout(self):
 		self.aboutRunning = True
+
+	def setHelp(self):
+		self.helpRunning = True
