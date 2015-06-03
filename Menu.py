@@ -26,10 +26,10 @@ class Menu():
 		self.store = Store(surface)
 		self.level = Level(surface)
 		self.about = Popup(surface, "About", "Developed By Rikin Katyal ICS3U Final Project 2015 Made Using Python and Pygame")
+		self.help = Popup(surface, "Help", "Use arrow keys or WASD to move. Space for emergency break. Collect coins to spend in the store. Drive through obstacles and park in marked parking spot.")
+		self.help.images([image.load("res/arrows.png"), image.load("res/wasd.png"), image.load("res/coin_medium.png")],[(310,456),(470,450),(660,475)])
 		self.aboutRunning = False
 		self.helpRunning = False
-
-		# self.notRunning()
 
 	def render(self, down):
 		mx, my = mouse.get_pos()
@@ -56,7 +56,7 @@ class Menu():
 				if self.rightMenuX <= 590 and self.rightMenuY <= 350:
 					for r in range(len(self.options)):
 						# draw.rect(self.surface, (255,255,0), self.optionRects[r])
-						if self.optionRects[r].collidepoint((mx,my)) and not self.aboutRunning:
+						if self.optionRects[r].collidepoint((mx,my)) and not self.aboutRunning and not self.helpRunning:
 							self.optionColors[r] = (0,0,0)
 							if mb[0]:
 								self.optionResults[r]()
@@ -73,6 +73,9 @@ class Menu():
 		if self.aboutRunning:
 			self.about.render()
 			self.aboutRunning = self.about.isRunning()
+		elif self.helpRunning:
+			self.help.render()
+			self.helpRunning = self.help.isRunning()
 
 	def isRunning(self):
 		return self.running
