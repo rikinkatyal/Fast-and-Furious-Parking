@@ -25,11 +25,13 @@ class Menu():
 		self.optionResults = [self.levelRunning,self.storeRunning,self.dead,self.setHelp,self.setAbout]
 		self.store = Store(surface)
 		self.level = Level(surface)
-		self.about = Popup(surface, "About", "Developed By Rikin Katyal ICS3U Final Project 2015 Made Using Python and Pygame")
-		self.help = Popup(surface, "Help", "Use arrow keys or WASD to move. Space for emergency break. Collect coins to spend in the store. Drive through obstacles and park in marked parking spot.")
+		self.about = Popup(surface, "About", ["Developed By Rikin Katyal", "ICS3U Final Project 2015", "Made Using Python and Pygame"])
+		self.help = Popup(surface, "Help", ["Use arrow keys or WASD to move.", "Press Space for emergency break.", "Collect coins to spend in the store.", "Drive through obstacles and park", "in marked parking spot."])
 		self.help.images([image.load("res/arrows.png"), image.load("res/wasd.png"), image.load("res/coin_medium.png")],[(310,456),(470,450),(660,475)])
+		self.settings = Popup(surface, "Settings", ["Sound Effects (SFX)", "Music"])
 		self.aboutRunning = False
 		self.helpRunning = False
+		self.settingsRunning = False
 
 	def render(self, down):
 		mx, my = mouse.get_pos()

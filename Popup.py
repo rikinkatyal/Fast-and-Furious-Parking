@@ -5,10 +5,10 @@ class Popup():
 	def __init__(self, surface, title, text):
 		self.surface = surface
 		self.title = title
-		self.text = []
-		for i in range(len(text)//35):
-			self.text.append(text[i*35:i*35+35].strip())
-		self.text.append(text[len(text)//35*35:])
+		self.text = text
+		# for i in range(len(text)//35):
+		# 	self.text.append(text[i*35:i*35+35].strip())
+		# self.text.append(text[len(text)//35*35:])
 		self.bg = image.load("res/popup.png")
 		self.x = image.load("res/x.png")
 		self.running = False

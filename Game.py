@@ -10,6 +10,7 @@ from Wall import *
 from Loading import *
 from Cone import *
 from Park import *
+from Popup import *
 
 mixer.init()
 
@@ -77,6 +78,9 @@ class Game():
 		self.pauseRect = Rect(940,18,64,64)
 		# self.loading = Loading(self.surface, cTime(), 5)
 
+		self.isPause = False
+		self.levelComplete = False
+
 		# Level
 		for x in range(len(LevelsMap[self.curLevel])):
 			for y in range(len(LevelsMap[self.curLevel][x])):
@@ -91,6 +95,14 @@ class Game():
 		self.wall_b = image.load("res/wall_b.png")
 		self.wall = image.load("res/wall.png")
 		self.coneImage = image.load("res/cone.png")
+
+		self.done = Popup(surface, "Level Complete", "Developed By Rikin Katyal ICS3U Final Project 2015 Made Using Python and Pygame")
+
+
+		settings = open("files/settings.txt").read().split()
+		if settings[0] == "1":
+			mixer.music.load("res/audio/background.mp3")
+			mixer.music.play(-1)
 
 	def sTime(self, time):
 		self.startTime = time
@@ -191,9 +203,9 @@ class Game():
 		if self.gameover:
 			draw.rect(self.surface, (102,204,102), (0,0,1024,768))
 
-		if pressed[K_RETURN]:
-			if self.mainCar.checkPark(self.parkSpot):
-				self.surface.blit(self.coin_font.render("LEVEL COMPLETE", 1, (255,255,255)), (512,384))
+		if self.mainCar.checkPark(self.parkSpot):
+			self.surface.blit(self.coin_font.render("LEVEL COMPLETE", 1, (255,255,255)), (512,384))
+			self.levelComplete = True
 
 	def HUD(self):
 		self.header = draw.rect(self.surface, (51, 153, 255), (0,0,self.surface.get_width(),100))
@@ -212,7 +224,8 @@ class Game():
 		self.surface.blit(self.coin_font.render(self.coin_count, 1, (255,255,255)), (650,28))
 
 	def lostLife(self):
-		self.lifeCount -= 1
+		pass
+		# self.lifeCount -= 1
 
 	def shift(self, gear=0, reverse=False):
 		self.gear.gear = gear
@@ -224,4 +237,4 @@ class Game():
 		return self.walls
 
 	def pause(self):
-		print("pause")
+		self.isPaused = True
