@@ -18,3 +18,6 @@ class Clock():
 
 	def gameOver(self):
 		return self.timeLeft < 0
+
+	def end(self):
+		self.timeLeft = -1

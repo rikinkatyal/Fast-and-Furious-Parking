@@ -2,7 +2,7 @@ from pygame import *
 
 class Popup():
 	init()
-	def __init__(self, surface, title, text):
+	def __init__(self, surface, title, text, x=True):
 		self.surface = surface
 		self.title = title
 		self.text = text
@@ -11,6 +11,7 @@ class Popup():
 		# self.text.append(text[len(text)//35*35:])
 		self.bg = image.load("res/popup.png")
 		self.x = image.load("res/x.png")
+		self.hasX = x
 		self.running = False
 		self.titleFont = font.Font("res/fonts/pricedown.ttf", 40)
 		self.bodyFont = font.Font("res/fonts/pricedown.ttf", 27)
@@ -21,7 +22,8 @@ class Popup():
 	def render(self):
 		self.running = True
 		self.surface.blit(self.bg, (self.surface.get_width()//2-self.bg.get_width()//2, self.surface.get_height()//2-self.bg.get_height()//2))
-		self.surface.blit(self.x, (self.surface.get_width()//2+self.bg.get_width()//2-self.x.get_width()*1.5, self.surface.get_height()//2-self.bg.get_height()//2))
+		if self.hasX:
+			self.surface.blit(self.x, (self.surface.get_width()//2+self.bg.get_width()//2-self.x.get_width()*1.5, self.surface.get_height()//2-self.bg.get_height()//2))
 		mx, my = mouse.get_pos()
 		mb = mouse.get_pressed()
 		if Rect(self.surface.get_width()//2+self.bg.get_width()//2-self.x.get_width()*1.5, self.surface.get_height()//2-self.bg.get_height()//2,32,32).collidepoint(mx,my) and mb[0]:
