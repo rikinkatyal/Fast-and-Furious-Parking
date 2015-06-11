@@ -34,16 +34,6 @@ while running:
 		elif e.type == MOUSEBUTTONUP:
 			down = False
 		if e.type == KEYDOWN:
-			if e.key == K_1:
-				game.shift(1)
-			if e.key == K_2:
-				game.shift(2)
-			if e.key == K_3:
-				game.shift(3)
-			if e.key == K_4:
-				game.shift(4)
-			if e.key == K_5:
-				game.shift(5)
 			if e.key == K_t:
 				game.lifeCount = 5
 			if e.key == K_r:
@@ -65,6 +55,9 @@ while running:
 			game.sTime(cTime())
 			gameCount = 0
 		game.run()
+		if game.isNextLevel():
+			game = Game(screen)
+			gameCount = 1
 
 	#mouse down
 	if down:

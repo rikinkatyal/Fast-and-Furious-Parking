@@ -37,7 +37,7 @@ class Menu():
 		mx, my = mouse.get_pos()
 		mb = mouse.get_pressed()
 		self.pressed = key.get_pressed()
-		self.surface.blit(self.arrow_left, (0,0))
+		# self.surface.blit(self.arrow_left, (0,0))
 		if not self.store.isRunning() and not self.level.isRunning():
 			self.surface.blit(self.bg, (0,0))
 			self.width += 16

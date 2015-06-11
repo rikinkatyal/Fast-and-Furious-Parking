@@ -49,7 +49,7 @@ class Popup():
 
 	def stars(self, stars):
 		star = image.load("res/star_large.png")
-		x, y = 422, 140
+		x, y = 422, 340
 		for i in range(stars):
 			if i == 1:
 				self.surface.blit(star, (x,y-20))

@@ -16,6 +16,7 @@ class Game():
 	def __init__(self,surface):
 		# Setup initial surface and variables
 		self.curLevel = int(open("files/selected_level.txt").read())
+		print(self.curLevel)
 		LevelsMap = {
 		1 : Levels.level1Map,
 		2 : Levels.level2Map,
@@ -123,13 +124,15 @@ class Game():
 
 		self.stars = 0
 
+		self.nextLevel = image.load("res/next_level.png")
+
+		self.goNextLevel = False
+
 	def sTime(self, time):
 		self.startTime = time
 		self.timer = Clock(self.surface, time, 1, 1, self.levelTime)
 
 	def run(self):
-		# if self.loading.isLoading():
-		# 	self.loading.load()
 		self.mx, self.my = mouse.get_pos()
 		self.mb = mouse.get_pressed()
 		if self.timer.gameOver():
@@ -142,6 +145,16 @@ class Game():
 			# mixer.music.play(-1)
 		self.HUD()
 		pressed = key.get_pressed()
+		if pressed[K_1]:
+			self.shift(1)
+		if pressed[K_2]:
+			self.shift(2)
+		if pressed[K_3]:
+			self.shift(3)
+		if pressed[K_4]:
+			self.shift(4)
+		if pressed[K_5]:
+			self.shift(5)
 		arrows = [pressed[K_UP], pressed[K_DOWN], pressed[K_RIGHT], pressed[K_LEFT]]
 		if pressed[K_DOWN] and not self.gameover:
 			self.gear.gearImage = image.load("res/gear_r.png")
@@ -214,13 +227,18 @@ class Game():
 			if self.levelComplete:
 				self.complete.setText(["Level completed in %s seconds" % str(self.timeLeft)])
 				self.complete.render(self.stars)
-				if self.curLevel < 15:
-					newUnlock = open("files/unlocked_levels.txt").read()
+				self.surface.blit(self.nextLevel, (550,500))
+				newUnlock = open("files/unlocked_levels.txt").read()
+				if self.curLevel < 15 and Rect(550,500,162,48).collidepoint(self.mx,self.my) and self.mb[0]:
 					if int(newUnlock) == self.curLevel:
 						newUnlock = str(int(newUnlock)+1)
 					f = open("files/unlocked_levels.txt", "w")
 					f.write(newUnlock)
-					f.close()			
+					f.close()
+					f = open("files/selected_level.txt", "w")
+					f.write(newUnlock)
+					f.close()
+					self.goNextLevel = True
 			else:
 				self.fail.render(0)
 
@@ -228,7 +246,7 @@ class Game():
 			if not self.justEnded:
 				self.justEnded = True
 				self.timeLeft = int(ceil(self.levelTime - self.timer.end()))
-				if self.timeLeft < (self.levelTime/4)*3:
+				if self.timeLeft < self.levelTime/4:
 					self.stars = 3
 				elif self.timeLeft < self.levelTime/2:
 					self.stars = 2
@@ -236,6 +254,10 @@ class Game():
 					self.stars = 1
 				coins = int(open("files/coins.txt").read()) + self.stars
 				open("files/coins.txt", "w").write(str(coins))
+				starF = open("files/stars.txt").read().split("\n")
+				if int(starF[self.curLevel-1]) < self.stars:
+					starF[self.curLevel-1] = str(self.stars)
+				open("files/stars.txt", "w").write("\n".join(starF))
 			self.levelComplete = True
 
 	def HUD(self):
@@ -268,3 +290,6 @@ class Game():
 
 	def pause(self):
 		self.isPaused = True
+
+	def isNextLevel(self):
+		return self.goNextLevel
