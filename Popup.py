@@ -19,7 +19,7 @@ class Popup():
 		self.imageFile = []
 		self.imageLoc = []
 
-	def render(self):
+	def render(self, stars=0):
 		self.running = True
 		self.surface.blit(self.bg, (self.surface.get_width()//2-self.bg.get_width()//2, self.surface.get_height()//2-self.bg.get_height()//2))
 		if self.hasX:
@@ -34,6 +34,7 @@ class Popup():
 		if self.hasImage:
 			for img in range(len(self.imageFile)):
 				self.surface.blit(self.imageFile[img], self.imageLoc[img])
+		self.stars(stars)
 
 	def isRunning(self):
 		return self.running
@@ -42,3 +43,16 @@ class Popup():
 		self.hasImage = True
 		self.imageFile = imgs
 		self.imageLoc = locs
+
+	def setText(self, text):
+		self.text = text
+
+	def stars(self, stars):
+		star = image.load("res/star_large.png")
+		x, y = 422, 140
+		for i in range(stars):
+			if i == 1:
+				self.surface.blit(star, (x,y-20))
+			else:
+				self.surface.blit(star, (x,y))
+			x += 60

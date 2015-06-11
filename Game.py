@@ -1,5 +1,3 @@
-from pygame import *
-from math import *
 from time import time as cTime
 
 from Car import *
@@ -115,10 +113,15 @@ class Game():
 		self.complete = Popup(surface, "Level Complete", ["You completed the level"], False)
 		self.fail = Popup(surface, "Level Failed", ["Please try again"], False)
 
-		settings = open("files/settings.txt").read().split()
-		if settings[0] == "1":
-			mixer.music.load("res/audio/background.mp3")
-			mixer.music.play(-1)
+		# settings = open("files/settings.txt").read().split()
+		# if settings[0] == "1":
+		# 	mixer.music.load("res/audio/background.mp3")
+		# 	mixer.music.play(-1)
+
+		self.completedIn = 0
+		self.justEnded = False
+
+		self.stars = 0
 
 	def sTime(self, time):
 		self.startTime = time
@@ -209,14 +212,30 @@ class Game():
 				mixer.music.play(0)
 		if self.gameover:
 			if self.levelComplete:
-				self.complete.render()
-				# coins = int(open("files/coins.txt").read()) + 1
-				# open("files/coins.txt", "w").write(str(coins))
+				self.complete.setText(["Level completed in %s seconds" % str(self.timeLeft)])
+				self.complete.render(self.stars)
+				if self.curLevel < 15:
+					newUnlock = open("files/unlocked_levels.txt").read()
+					if int(newUnlock) == self.curLevel:
+						newUnlock = str(int(newUnlock)+1)
+					f = open("files/unlocked_levels.txt", "w")
+					f.write(newUnlock)
+					f.close()			
 			else:
-				self.fail.render()
+				self.fail.render(0)
 
 		if self.mainCar.checkPark(self.parkSpot):
-			self.timer.end()
+			if not self.justEnded:
+				self.justEnded = True
+				self.timeLeft = int(ceil(self.levelTime - self.timer.end()))
+				if self.timeLeft < (self.levelTime/4)*3:
+					self.stars = 3
+				elif self.timeLeft < self.levelTime/2:
+					self.stars = 2
+				else:
+					self.stars = 1
+				coins = int(open("files/coins.txt").read()) + self.stars
+				open("files/coins.txt", "w").write(str(coins))
 			self.levelComplete = True
 
 	def HUD(self):

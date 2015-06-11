@@ -26,7 +26,7 @@ class Menu():
 		self.store = Store(surface)
 		self.level = Level(surface)
 		self.about = Popup(surface, "About", ["Developed By Rikin Katyal", "ICS3U Final Project 2015", "Made Using Python and Pygame"])
-		self.help = Popup(surface, "Help", ["Use arrow keys or WASD to move.", "Press Space for emergency break.", "Collect coins to spend in the store.", "Drive through obstacles and park", "in marked parking spot."])
+		self.help = Popup(surface, "Help", ["Use arrow keys or WASD to move.", "Press Space for emergency break.", "Earn coins to spend in the store.", "Drive through obstacles and park", "in marked parking spot."])
 		self.help.images([image.load("res/arrows.png"), image.load("res/wasd.png"), image.load("res/coin_medium.png")],[(310,456),(470,450),(660,475)])
 		self.settings = Popup(surface, "Settings", ["Sound Effects (SFX)", "Music"])
 		self.aboutRunning = False
