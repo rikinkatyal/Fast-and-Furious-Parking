@@ -18,6 +18,7 @@ menu = Menu(screen)
 running = True
 menuScreen = True
 gameScreen = False
+#load font and texture
 fpsfont = font.SysFont("monospace", 15)
 road = image.load("res/road_texture.png")
 gameCount = 1
@@ -34,8 +35,6 @@ while running:
 		elif e.type == MOUSEBUTTONUP:
 			down = False
 		if e.type == KEYDOWN:
-			if e.key == K_t:
-				game.lifeCount = 5
 			if e.key == K_r:
 				game = Game(screen)
 				gameCount = 1

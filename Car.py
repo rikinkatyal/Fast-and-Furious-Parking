@@ -1,11 +1,11 @@
-#car class that has driving physics and car collision
+#car class that has driving physics, parking, and car collision
 
 from pygame import *
 from math import *
 
 class Car():
 	def __init__(self, surface, picture, x, y, angle):
-		"Initialize all variables"
+		"Initialize all variables and set car image, location, and angle"
 		self.surface = surface
 		self.carRect = Rect(0,0,0,0)
 		self.speed = 1
@@ -22,7 +22,7 @@ class Car():
 		self.brakeSound = mixer.Sound("res/audio/ebrake.ogg")
 
 	def render(self):
-		"Blits everything"
+		"Blits everything on surface"
 		if self.curSpeed < 0:
 			self.curSpeed = 0
 		self.carImageRotated = transform.rotozoom(self.carImage, self.angle, 1)
@@ -110,8 +110,6 @@ class Car():
 			self.curSpeed = self.curSpeed*0.5
 		else:
 			self.curSpeed = self.curSpeed*0.75
-		# if isinstance(carObj, Car):
-		# 	carObj.pushBack(pt[0], pt[1], self.x, self.y, self.angle, self.curSpeed)
 
 	def getOuter(self):
 		"Gets points on car outline"
@@ -137,7 +135,7 @@ class Car():
 		return mag, ang
 
 	def vect2xy(self, ang, mag):
-		"Converts a vector to a point"
+		"Converts a vector to a point using angle and magnitude"
 		return cos(radians(ang))*mag, sin(radians(ang))*mag
 
 	def rotatePoint(self, x, y, px, py, ang, size):
@@ -149,7 +147,7 @@ class Car():
 		return int((x+dx)*size), int((y+dy)*size)
 
 	def checkPark(self, park):
-		"Checks if car is parked in parking spot"
+		"Checks if car is parked in parking spot by passing in Park object"
 		point1 = self.rotatePoint(self.x, self.y, int(self.x), int(self.y - self.carImage.get_height()/2.5), self.angle, 1)
 		point2 = self.rotatePoint(self.x, self.y, int(self.x), int(self.y + self.carImage.get_height()/2.5), self.angle, 1)
 		return park.rect.collidepoint(point1) and park.rect.collidepoint(point2)

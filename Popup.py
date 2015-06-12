@@ -1,8 +1,11 @@
+#popup class
+
 from pygame import *
 
 class Popup():
 	init()
 	def __init__(self, surface, title, text, x=True):
+		"Initialize popup title, text, and if x in corner"
 		self.surface = surface
 		self.title = title
 		self.text = text
@@ -20,6 +23,7 @@ class Popup():
 		self.imageLoc = []
 
 	def render(self, stars=0):
+		"Render popup, stars for level complete popup"
 		self.running = True
 		self.surface.blit(self.bg, (self.surface.get_width()//2-self.bg.get_width()//2, self.surface.get_height()//2-self.bg.get_height()//2))
 		if self.hasX:
@@ -37,17 +41,21 @@ class Popup():
 		self.stars(stars)
 
 	def isRunning(self):
+		"Check if running"
 		return self.running
 
 	def images(self, imgs, locs):
+		"Set images and locations"
 		self.hasImage = True
 		self.imageFile = imgs
 		self.imageLoc = locs
 
 	def setText(self, text):
+		"Set text again"
 		self.text = text
 
 	def stars(self, stars):
+		"Blit stars"
 		star = image.load("res/star_large.png")
 		x, y = 422, 340
 		for i in range(stars):

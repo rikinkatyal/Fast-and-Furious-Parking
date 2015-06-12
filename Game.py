@@ -1,3 +1,5 @@
+#main game class
+
 from time import time as cTime
 
 from Car import *
@@ -10,12 +12,15 @@ from Cone import *
 from Park import *
 from Popup import *
 
+#initialize music
 mixer.init()
 
 class Game():
 	def __init__(self,surface):
 		# Setup initial surface and variables
+		#read what level game is supposed to be
 		self.curLevel = int(open("files/selected_level.txt").read())
+		#dictionary for level maps
 		LevelsMap = {
 		1 : Levels.level1Map,
 		2 : Levels.level2Map,
@@ -33,6 +38,7 @@ class Game():
 		14 : Levels.level14Map,
 		15 : Levels.level15Map,
 		}
+		#dictionary for obstacle cars
 		LevelsCar = {
 		1 : [],
 		2 : [],
@@ -50,6 +56,7 @@ class Game():
 		14 : [Car(surface, "res/car13.png", 800, 540, 90)],
 		15 : [Car(surface, "res/car5.png", 760, 450, 34), Car(surface, "res/car6.png", 950, 430, -44)]
 		}
+		#dictionary for parking location
 		ParkLoc = {
 		1 : Park(surface, 475, 324),
 		2 : Park(surface, 240, 260),
@@ -67,6 +74,7 @@ class Game():
 		14 : Park(surface, 670, 410),
 		15 : Park(surface, 810, 510)
 		}
+		#dictionary for level time
 		Times = {
 		1 : 30,
 		2 : 60,
@@ -84,7 +92,9 @@ class Game():
 		14 : 75,
 		15 : 75,
 		}
+		#read car image that is active
 		self.carImg = open("files/car.txt").read().strip()
+		#dictionary for main car location
 		MainCar = {
 		1 : Car(surface, self.carImg, surface.get_width()//2,surface.get_height()//2+200,0),
 		2 : Car(surface, self.carImg, surface.get_width()//2-50,surface.get_height()//2+300,0),
@@ -102,17 +112,21 @@ class Game():
 		14 : Car(surface, self.carImg, 120, 620, 0),
 		15 : Car(surface, self.carImg, 140, 260, 0)
 		}
+		#set variables based on current level
 		self.parkSpot = ParkLoc[self.curLevel]
 		self.levelTime = Times[self.curLevel]
 		self.surface = surface
 		self.mainCar = MainCar[self.curLevel]
+		#engine start sound
 		mixer.music.load("res/audio/start.mp3")
 		mixer.music.play(0)
 		# mixer.music.load("res/audio/engine.mp3")
 		# mixer.music.play(-1)
+		#setup lives
 		self.lifeCount = 5
 		self.lifeImage = image.load("res/life.png")
 
+		#load all images, fonts, and setup flags
 		self.coin_count = open("files/coins.txt").read()
 		self.coin_image = image.load("res/coin_small.png")
 		self.coin_font = font.Font("res/fonts/pricedown.ttf", 32)
@@ -139,18 +153,17 @@ class Game():
 
 		self.carObsctacles = LevelsCar[self.curLevel]
 
-		self.grass = image.load("res/grass.png")
+		self.grass = image.load("res/grass.png").convert()
 
 		self.timer = Clock(surface, cTime, 1, 1, 0)
 
 		self.pauseButton = image.load("res/pause.png")
 		self.pauseRect = Rect(940,18,64,64)
-		# self.loading = Loading(self.surface, cTime(), 5)
 
 		self.isPause = False
 		self.levelComplete = False
 
-		# Level
+		# Level maps for walls
 		for x in range(len(LevelsMap[self.curLevel])):
 			for y in range(len(LevelsMap[self.curLevel][x])):
 				if LevelsMap[self.curLevel][x][y] == 1:
@@ -160,18 +173,14 @@ class Game():
 				elif LevelsMap[self.curLevel][x][y] == 3:
 					self.cones.append(Wall(y*16,x*16+100,self.surface, True))
 
-		self.wall_y = image.load("res/wall_y.png")
-		self.wall_b = image.load("res/wall_b.png")
-		self.wall = image.load("res/wall.png")
+		#load images and setup popup for game end
+		self.wall_y = image.load("res/wall_y.png").convert()
+		self.wall_b = image.load("res/wall_b.png").convert()
+		self.wall = image.load("res/wall.png").convert()
 		self.coneImage = image.load("res/cone.png")
 
 		self.complete = Popup(surface, "Level Complete", ["You completed the level"], False)
 		self.fail = Popup(surface, "Level Failed", ["Please try again"], False)
-
-		# settings = open("files/settings.txt").read().split()
-		# if settings[0] == "1":
-		# 	mixer.music.load("res/audio/background.mp3")
-		# 	mixer.music.play(-1)
 
 		self.completedIn = 0
 		self.justEnded = False
@@ -184,13 +193,18 @@ class Game():
 		self.goNextLevel = False
 		self.goMenu = False
 
+		self.restart = image.load("res/restart.png")
+
 	def sTime(self, time):
+		"Setup level timer"
 		self.startTime = time
 		self.timer = Clock(self.surface, time, 1, 1, self.levelTime)
 
 	def run(self):
+		"Main game run function"
 		self.mx, self.my = mouse.get_pos()
 		self.mb = mouse.get_pressed()
+		#end game and engine delay for 2 seconds
 		if self.timer.gameOver():
 			self.gameover = True
 		if self.lifeCount == 0:
@@ -199,8 +213,11 @@ class Game():
 			self.timeDelay = True
 			# mixer.music.load("res/audio/engine.mp3")
 			# mixer.music.play(-1)
+		#blit heads up display
 		self.HUD()
+		#get keys pressed
 		pressed = key.get_pressed()
+		#change gear/speed
 		if pressed[K_1]:
 			self.shift(1)
 		if pressed[K_2]:
@@ -211,13 +228,14 @@ class Game():
 			self.shift(4)
 		if pressed[K_5]:
 			self.shift(5)
+		#get arrow/wasd keys for driving
 		arrows = [pressed[K_UP], pressed[K_DOWN], pressed[K_RIGHT], pressed[K_LEFT]]
 		if pressed[K_DOWN] and not self.gameover:
 			self.gear.gearImage = image.load("res/gear_r.png")
 		elif not self.gameover:
 			self.gear.gearImage = image.load("res/gear_"+str(self.mainCar.speed)+".png")
 		wasd = [pressed[K_w],pressed[K_s],pressed[K_d],pressed[K_a]]
-		
+		#if game is not ended, drive
 		if not self.gameover:
 			if pressed[K_e]:
 				self.mainCar.brake()
@@ -239,7 +257,7 @@ class Game():
 						self.crashX, self.crashY = int(pt[0]),int(pt[1])
 					self.crashObj = car
 			car.render()
-
+		#blit walls, cone, and grass
 		yellow = False
 		for wall in self.walls:
 			if yellow:
@@ -265,9 +283,11 @@ class Game():
 						self.crashX, self.crashY = int(pt[0]),int(pt[1])
 						self.crashObj = wall
 
+		#render parking spot and main car
 		self.parkSpot.render()
 		self.mainCar.render()
 
+		#if car crashed restart car, remove life, and blit crash sign
 		if self.crash:
 			self.surface.blit(self.crashImage, (self.crashX-40,self.crashY-34))
 			self.crash = False
@@ -279,6 +299,7 @@ class Game():
 			if self.lifeCount > 0:
 				mixer.music.load("res/audio/start.mp3")
 				mixer.music.play(0)
+		#end game if gameover
 		if self.gameover:
 			if self.levelComplete:
 				self.complete.setText(["Level completed in %s seconds" % str(self.timeLeft)])
@@ -300,7 +321,11 @@ class Game():
 					self.goMenu = True
 			else:
 				self.fail.render(0)
+			self.surface.blit(self.restart, (480, 384))
+			if Rect(480,384,64,64).collidepoint(self.mx,self.my) and self.mb[0]:
+				self.goNextLevel = True
 
+		#check if car is in parking and asign stars based on time and life
 		if self.mainCar.checkPark(self.parkSpot):
 			if not self.justEnded:
 				self.justEnded = True
@@ -320,6 +345,7 @@ class Game():
 			self.levelComplete = True
 
 	def HUD(self):
+		"Heads up display that has logo, coins, timer"
 		self.header = draw.rect(self.surface, (51, 153, 255), (0,0,self.surface.get_width(),100))
 		self.surface.blit(self.gear.gearImage, (0,0))
 		livesLocation = 750
@@ -329,29 +355,28 @@ class Game():
 		self.surface.blit(self.logo, (self.surface.get_width()//2-(self.logo.get_width()//2),13))
 		if not self.gameover:
 			self.timer.render()
-		# self.surface.blit(self.pauseButton, (940,18))
-		# if self.pauseRect.collidepoint((self.mx,self.my)) and self.mb[0]:
-		# 	self.pause()
 		self.surface.blit(self.coin_image, (615,34))
 		self.surface.blit(self.coin_font.render(self.coin_count, 1, (255,255,255)), (650,28))
 
 	def lostLife(self):
+		"Remove a life"
 		self.lifeCount -= 1
 
 	def shift(self, gear=0, reverse=False):
+		"Takes in gear/speed and if reverse and blits gear respectively and changes speed"
 		self.gear.gear = gear
 		self.gear.reverse = reverse
 		self.gear.gearImage = image.load("res/gear_"+str(gear)+".png")
 		self.mainCar.speed = gear
 
 	def getWall(self):
+		"Gets all the walls"
 		return self.walls
 
-	def pause(self):
-		self.isPaused = True
-
 	def isNextLevel(self):
+		"Checks if level complete and go to next level"
 		return self.goNextLevel
 
 	def startMenu(self):
+		"Go back to menu screen"
 		return self.goMenu
