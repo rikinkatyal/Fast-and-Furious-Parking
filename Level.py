@@ -6,7 +6,7 @@ class Level():
 	#initialize pygame
 	init()
 	def __init__(self, surface):
-		#gets surface, loads images, and sets starting flags and variables
+		"gets surface, loads images, and sets starting flags and variables"
 		self.surface = surface
 		self.bg = transform.scale(image.load("res/levels_bg.jpg").convert(), (surface.get_width(),surface.get_height()))
 		self.button = image.load("res/level_button.png")
