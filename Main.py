@@ -58,6 +58,11 @@ while running:
 		if game.isNextLevel():
 			game = Game(screen)
 			gameCount = 1
+		if game.startMenu():
+			gameScreen = False
+			menuScreen = True
+			menu = Menu(screen)
+			gameCount = 1
 
 	#mouse down
 	if down:

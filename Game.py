@@ -16,37 +16,46 @@ class Game():
 	def __init__(self,surface):
 		# Setup initial surface and variables
 		self.curLevel = int(open("files/selected_level.txt").read())
-		print(self.curLevel)
 		LevelsMap = {
 		1 : Levels.level1Map,
 		2 : Levels.level2Map,
 		3 : Levels.level3Map,
-		4 : Levels.level4Map
+		4 : Levels.level4Map,
+		5 : Levels.level5Map,
+		6 : Levels.level6Map
 		}
 		LevelsCar = {
 		1 : [],
 		2 : [],
 		3 : [Car(surface, "res/car4.png", 430, 450, 20), Car(surface, "res/car13.png", 550, 460, 17)],
-		4 : [Car(surface, "res/car9.png", 490, 450, -45), Car(surface, "res/car5.png", 700, 330, -45)]
+		4 : [Car(surface, "res/car9.png", 490, 450, -45), Car(surface, "res/car5.png", 700, 330, -45)],
+		5 : [Car(surface, "res/car17.png", 220, 340, 30), Car(surface, "res/car18.png", 600, 230, 90), Car(surface, "res/car11.png", 400, 430, 12)],
+		6 : [Car(surface, "res/car15.png", 680, 420, 30)]
 		}
 		ParkLoc = {
 		1 : Park(surface, 475, 324),
 		2 : Park(surface, 240, 260),
 		3 : Park(surface, 459, 230),
-		4 : Park(surface, 710, 130)
+		4 : Park(surface, 710, 130),
+		5 : Park(surface, 700, 200),
+		6 : Park(surface, 50, 150)
 		}
 		Times = {
 		1 : 30,
 		2 : 60,
 		3 : 60,
-		4 : 75
+		4 : 75,
+		5 : 75,
+		6 : 90
 		}
 		self.carImg = open("files/car.txt").read().strip()
 		MainCar = {
 		1 : Car(surface, self.carImg, surface.get_width()//2,surface.get_height()//2+200,0),
 		2 : Car(surface, self.carImg, surface.get_width()//2-50,surface.get_height()//2+300,0),
 		3 : Car(surface, self.carImg, 496,surface.get_height()//2+250,0),
-		4 : Car(surface, self.carImg, surface.get_width()//2-100,surface.get_height()//2+250,0)
+		4 : Car(surface, self.carImg, surface.get_width()//2-100,surface.get_height()//2+250,0),
+		5 : Car(surface, self.carImg, surface.get_width()//2-50,surface.get_height()//2+300,0),
+		6 : Car(surface, self.carImg, 320, 500, 0)
 		}
 		self.parkSpot = ParkLoc[self.curLevel]
 		self.levelTime = Times[self.curLevel]
@@ -125,8 +134,10 @@ class Game():
 		self.stars = 0
 
 		self.nextLevel = image.load("res/next_level.png")
+		self.menuButton = image.load("res/menu.png")
 
 		self.goNextLevel = False
+		self.goMenu = False
 
 	def sTime(self, time):
 		self.startTime = time
@@ -228,17 +239,20 @@ class Game():
 				self.complete.setText(["Level completed in %s seconds" % str(self.timeLeft)])
 				self.complete.render(self.stars)
 				self.surface.blit(self.nextLevel, (550,500))
+				self.surface.blit(self.menuButton, (350,470))
 				newUnlock = open("files/unlocked_levels.txt").read()
+				if int(newUnlock) == self.curLevel:
+					newUnlock = str(int(newUnlock)+1)
+				f1 = open("files/unlocked_levels.txt", "w")
+				f1.write(newUnlock)
+				f1.close()
 				if self.curLevel < 15 and Rect(550,500,162,48).collidepoint(self.mx,self.my) and self.mb[0]:
-					if int(newUnlock) == self.curLevel:
-						newUnlock = str(int(newUnlock)+1)
-					f = open("files/unlocked_levels.txt", "w")
-					f.write(newUnlock)
-					f.close()
-					f = open("files/selected_level.txt", "w")
-					f.write(newUnlock)
-					f.close()
+					f2 = open("files/selected_level.txt", "w")
+					f2.write(newUnlock)
+					f2.close()
 					self.goNextLevel = True
+				elif Rect(350,470,82,84).collidepoint(self.mx,self.my) and self.mb[0]:
+					self.goMenu = True
 			else:
 				self.fail.render(0)
 
@@ -246,9 +260,9 @@ class Game():
 			if not self.justEnded:
 				self.justEnded = True
 				self.timeLeft = int(ceil(self.levelTime - self.timer.end()))
-				if self.timeLeft < self.levelTime/4:
+				if self.timeLeft < self.levelTime/4 and self.lifeCount == 5:
 					self.stars = 3
-				elif self.timeLeft < self.levelTime/2:
+				elif self.timeLeft < self.levelTime/2 and self.lifeCount >= 3:
 					self.stars = 2
 				else:
 					self.stars = 1
@@ -293,3 +307,6 @@ class Game():
 
 	def isNextLevel(self):
 		return self.goNextLevel
+
+	def startMenu(self):
+		return self.goMenu

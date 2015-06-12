@@ -31,7 +31,7 @@ class Car():
 		self.carRect = Rect(self.x-self.boundingRect[2]/2,self.y-self.boundingRect[3]/2,self.boundingRect[2],self.boundingRect[3])
 
 	def drive(self, forward=False, backward=False, right=False, left=False):
-		"Moves car based on arrow or WASD keys"
+		"Moves car based on arrow or WASD keys (direction)"
 		if forward:
 			#moves car forward
 			if self.lastDirection == "REVERSE" and self.curSpeed > 0:
@@ -137,7 +137,7 @@ class Car():
 		return mag, ang
 
 	def vect2xy(self, ang, mag):
-		"Converts a vectore to a point"
+		"Converts a vector to a point"
 		return cos(radians(ang))*mag, sin(radians(ang))*mag
 
 	def rotatePoint(self, x, y, px, py, ang, size):
