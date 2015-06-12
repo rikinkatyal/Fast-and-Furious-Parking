@@ -27,7 +27,10 @@ class Game():
 		8 : Levels.level8Map,
 		9 : Levels.level9Map,
 		10 : Levels.level10Map,
-		11 : Levels.level11Map
+		11 : Levels.level11Map,
+		12 : Levels.level12Map,
+		13 : Levels.level13Map,
+		14 : Levels.level14Map
 		}
 		LevelsCar = {
 		1 : [],
@@ -40,7 +43,10 @@ class Game():
 		8 : [Car(surface, "res/car8.png", 560, 520, 11), Car(surface, "res/car9.png", 730, 520, 17), Car(surface, "res/car10.png", 700, 420, 35), Car(surface, "res/car11.png", 530, 420, 60), Car(surface, "res/car3.png", 610, 320, 85), Car(surface, "res/car4.png", 500, 300, 95), Car(surface, "res/car5.png", 420, 420, 104), Car(surface, "res/car18.png", 300, 420, 90), Car(surface, "res/car17.png", 180, 420, 90), Car(surface, "res/car17.png", 400, 310, 90), Car(surface, "res/car18.png", 280, 310, 90), Car(surface, "res/car16.png", 80, 380, 20)],
 		9 : [],
 		10 : [Car(surface, "res/car11.png", 450, 350, 4), Car(surface, "res/car12.png", 450, 480, -4), Car(surface, "res/car6.png", 460, 560, 86), Car(surface, "res/car5.png", 500, 240, -39)],
-		11 : [Car(surface, "res/car6.png", 150, 650, 5)]
+		11 : [Car(surface, "res/car6.png", 150, 650, 5)],
+		12 : [Car(surface, "res/car3.png", 940, 180, -44), Car(surface, "res/car1.png", 200, 450, 89), Car(surface, "res/car2.png", 720, 480, -90), Car(surface, "res/car16.png", 500, 350, 0)],
+		13 : [Car(surface, "res/car7.png", 300, 450, 90), Car(surface, "res/car10.png", 640, 200, 95)],
+		14 : [Car(surface, "res/car13.png", 800, 540, 90)]
 		}
 		ParkLoc = {
 		1 : Park(surface, 475, 324),
@@ -53,7 +59,10 @@ class Game():
 		8 : Park(surface, 100, 150),
 		9 : Park(surface, 310, 280),
 		10 : Park(surface, 550, 350),
-		11 : Park(surface, 730, 220)
+		11 : Park(surface, 730, 220),
+		12 : Park(surface, 700, 550),
+		13 : Park(surface, 755, 570),
+		14 : Park(surface, 670, 410)
 		}
 		Times = {
 		1 : 30,
@@ -66,7 +75,10 @@ class Game():
 		8 : 75,
 		9 : 75,
 		10 : 75,
-		11 : 75
+		11 : 75,
+		12 : 75,
+		13 : 75,
+		14 : 75
 		}
 		self.carImg = open("files/car.txt").read().strip()
 		MainCar = {
@@ -80,7 +92,10 @@ class Game():
 		8 : Car(surface, self.carImg, 650, 630, 0),
 		9 : Car(surface, self.carImg, 484, 700, 0),
 		10 : Car(surface, self.carImg, 180, 250, 0),
-		11 : Car(surface, self.carImg, 900, 650, 0)
+		11 : Car(surface, self.carImg, 900, 650, 0),
+		12 : Car(surface, self.carImg, 500, 520, 0),
+		13 : Car(surface, self.carImg, 120, 640, 0),
+		14 : Car(surface, self.carImg, 120, 620, 0)
 		}
 		self.parkSpot = ParkLoc[self.curLevel]
 		self.levelTime = Times[self.curLevel]
@@ -273,7 +288,7 @@ class Game():
 				f1.close()
 				if self.curLevel < 15 and Rect(550,500,162,48).collidepoint(self.mx,self.my) and self.mb[0]:
 					f2 = open("files/selected_level.txt", "w")
-					f2.write(newUnlock)
+					f2.write(str(self.curLevel+1))
 					f2.close()
 					self.goNextLevel = True
 				elif Rect(350,470,82,84).collidepoint(self.mx,self.my) and self.mb[0]:
