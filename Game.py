@@ -34,7 +34,7 @@ class Game():
 		5 : [Car(surface, "res/car17.png", 220, 340, 30), Car(surface, "res/car18.png", 600, 230, 90), Car(surface, "res/car11.png", 400, 430, 12)],
 		6 : [Car(surface, "res/car15.png", 680, 420, 30)],
 		7 : [Car(surface, "res/car2.png", 260, 370, 4), Car(surface, "res/car4.png", 350, 370, 349), Car(surface, "res/car6.png", 510, 370, 14), Car(surface, "res/car16.png", 680, 370, 93), Car(surface, "res/car17.png", 260, 575, 18), Car(surface, "res/car17.png", 360, 575, 18), Car(surface, "res/car17.png", 460, 575, 18), Car(surface, "res/car17.png", 560, 575, 18), Car(surface, "res/car17.png", 660, 575, 18), Car(surface, "res/car17.png", 760, 575, 18)],
-		8 : [Car(surface, "res/car8.png", 560, 520, 11), Car(surface, "res/car9.png", 730, 520, 17), Car(surface, "res/car10.png", 700, 420, 35), Car(surface, "res/car11.png", 530, 420, 60), Car(surface, "res/car3.png", 610, 320, 85), Car(surface, "res/car4.png", 500, 300, 95), Car(surface, "res/car5.png", 420, 420, 104), Car(surface, "res/car18.png", 300, 420, 90), Car(surface, "res/car17.png", 180, 420, 90), Car(surface, "res/car17.png", 300, 320, 90), Car(surface, "res/car18.png", 180, 320, 90), ]
+		8 : [Car(surface, "res/car8.png", 560, 520, 11), Car(surface, "res/car9.png", 730, 520, 17), Car(surface, "res/car10.png", 700, 420, 35), Car(surface, "res/car11.png", 530, 420, 60), Car(surface, "res/car3.png", 610, 320, 85), Car(surface, "res/car4.png", 500, 300, 95), Car(surface, "res/car5.png", 420, 420, 104), Car(surface, "res/car18.png", 300, 420, 90), Car(surface, "res/car17.png", 180, 420, 90), Car(surface, "res/car17.png", 400, 310, 90), Car(surface, "res/car18.png", 280, 310, 90), Car(surface, "res/car16.png", 80, 380, 20)]
 		}
 		ParkLoc = {
 		1 : Park(surface, 475, 324),
