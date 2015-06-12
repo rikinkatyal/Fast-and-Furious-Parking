@@ -7,8 +7,6 @@ from Clock import *
 from Gear import *
 import Levels
 from Wall import *
-from Loading import *
-from Cone import *
 from Park import *
 from Popup import *
 
@@ -56,7 +54,7 @@ class Game():
 		14 : [Car(surface, "res/car13.png", 800, 540, 90)],
 		15 : [Car(surface, "res/car5.png", 760, 450, 34), Car(surface, "res/car6.png", 950, 430, -44)]
 		}
-		#dictionary for parking location
+		#dictionary for parking location with park object
 		ParkLoc = {
 		1 : Park(surface, 475, 324),
 		2 : Park(surface, 240, 260),
@@ -137,6 +135,7 @@ class Game():
 
 		self.gameover = False
 		
+		#set crash variables
 		self.crash = False
 		self.crashImage = image.load("res/crash.png")
 		self.crashX, self.crashY = 0,0
@@ -179,6 +178,7 @@ class Game():
 		self.wall = image.load("res/wall.png").convert()
 		self.coneImage = image.load("res/cone.png")
 
+		#popups
 		self.complete = Popup(surface, "Level Complete", ["You completed the level"], False)
 		self.fail = Popup(surface, "Level Failed", ["Please try again"], False)
 
@@ -211,8 +211,6 @@ class Game():
 			self.gameover = True
 		if cTime()-self.startTime > 2:
 			self.timeDelay = True
-			# mixer.music.load("res/audio/engine.mp3")
-			# mixer.music.play(-1)
 		#blit heads up display
 		self.HUD()
 		#get keys pressed
@@ -249,6 +247,7 @@ class Game():
 			else:
 				self.mainCar.drive()
 				self.mainCar.brakeSound.stop()
+		#blit obstacle cars and check collisoin from main car
 		for car in self.carObsctacles:
 			if Rect((car.x-car.boundingRect[2]/2,car.y-car.boundingRect[3]/2, car.boundingRect[2], car.boundingRect[3])).colliderect(Rect(self.mainCar.x-self.mainCar.boundingRect[2]/2,self.mainCar.y-self.mainCar.boundingRect[3]/2, self.mainCar.carImageRotated.get_rect()[2], self.mainCar.carImageRotated.get_rect()[3])):
 				for pt in self.mainCar.outlineRotated:
@@ -299,7 +298,7 @@ class Game():
 			if self.lifeCount > 0:
 				mixer.music.load("res/audio/start.mp3")
 				mixer.music.play(0)
-		#end game if gameover
+		#end game if gameover and write to files
 		if self.gameover:
 			if self.levelComplete:
 				self.complete.setText(["Level completed in %s seconds" % str(self.timeLeft)])
@@ -349,12 +348,15 @@ class Game():
 		self.header = draw.rect(self.surface, (51, 153, 255), (0,0,self.surface.get_width(),100))
 		self.surface.blit(self.gear.gearImage, (0,0))
 		livesLocation = 750
+		#blit lives
 		for i in range(self.lifeCount):
 			self.surface.blit(self.lifeImage, (livesLocation, 34))
 			livesLocation += 37
+		#blit logo and timer
 		self.surface.blit(self.logo, (self.surface.get_width()//2-(self.logo.get_width()//2),13))
 		if not self.gameover:
 			self.timer.render()
+		#blit coins
 		self.surface.blit(self.coin_image, (615,34))
 		self.surface.blit(self.coin_font.render(self.coin_count, 1, (255,255,255)), (650,28))
 

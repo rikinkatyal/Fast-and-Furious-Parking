@@ -23,10 +23,14 @@ class Car():
 
 	def render(self):
 		"Blits everything on surface"
+		#make sure current speed isnt less than 0
 		if self.curSpeed < 0:
 			self.curSpeed = 0
+		#rotate car image
 		self.carImageRotated = transform.rotozoom(self.carImage, self.angle, 1)
+		#get rotated rect around car
 		self.boundingRect = self.carImageRotated.get_rect()
+		#blit image rotated
 		self.surface.blit(self.carImageRotated, (self.x-self.boundingRect[2]/2,self.y-self.boundingRect[3]/2))
 		self.carRect = Rect(self.x-self.boundingRect[2]/2,self.y-self.boundingRect[3]/2,self.boundingRect[2],self.boundingRect[3])
 
@@ -35,6 +39,7 @@ class Car():
 		if forward:
 			#moves car forward
 			if self.lastDirection == "REVERSE" and self.curSpeed > 0:
+				#bounce back
 				self.curSpeed -= 0.25
 			else:
 				if self.curSpeed < self.speed:
@@ -51,6 +56,7 @@ class Car():
 		elif backward:
 			#moves car in reverse
 			if self.lastDirection == "FORWARD" and self.curSpeed > 0:
+				#bounce back
 				self.curSpeed -= 0.25
 			else:
 				if self.curSpeed < self.speed:
@@ -68,6 +74,7 @@ class Car():
 			#brings car to slow stop
 			if self.curSpeed > 0:
 				self.curSpeed -= self.speed*0.025
+				#slowly come to stop while going forward
 				if self.lastDirection == "FORWARD":
 					if right:
 						self.angle -= self.curSpeed/2
@@ -77,6 +84,7 @@ class Car():
 					for pt in range(len(self.outline)):
 						self.outline[pt] = self.point(self.outline[pt][0], self.outline[pt][1], self.curSpeed, self.angle+90)
 						self.outlineRotated[pt] = self.rotatePoint(self.x, self.y, self.outline[pt][0], self.outline[pt][1], self.angle, 1)
+				#slowly come to stop while in reverse
 				elif self.lastDirection == "REVERSE":
 					if right:
 						self.angle += self.curSpeed/2
@@ -101,7 +109,7 @@ class Car():
 			self.brakeSound.stop()
 
 	def crashed(self, carObj, pt):
-		"When car crashes, it goes back in opposite direction"
+		"When car crashes, it goes back in opposite direction, ie. bounce back"
 		if self.lastDirection == "FORWARD":
 			self.lastDirection = "REVERSE"
 		elif self.lastDirection == "REVERSE":
@@ -121,7 +129,7 @@ class Car():
 		return (points)
 
 	def getPt(self):
-		"Returns the outline"
+		"Returns the outline of car"
 		return self.outline
 
 	def getBoundRect(self):

@@ -50,13 +50,16 @@ while running:
 	#render game if gamescreen
 	elif gameScreen:
 		screen.fill((140,140,140))
+		#set time level started
 		if gameCount:
 			game.sTime(cTime())
 			gameCount = 0
 		game.run()
+		#create new game with next level
 		if game.isNextLevel():
 			game = Game(screen)
 			gameCount = 1
+		#go back to menu
 		if game.startMenu():
 			gameScreen = False
 			menuScreen = True

@@ -66,6 +66,7 @@ class Store():
 				if Rect(570,275,126,48).collidepoint(mx,my) and down:
 					f = open("files/car.txt", "w").write("res/car%s.png" % str(self.curCar + 1))
 		else:
+			#blit cost
 			self.surface.blit(self.buy, (570, 275))
 			self.surface.blit(self.smallFont.render("Cost: ", 1, (255,255,255)), (550, 350))
 			self.surface.blit(self.coinSmall, (660, 360))
