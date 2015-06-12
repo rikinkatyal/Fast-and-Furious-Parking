@@ -24,7 +24,10 @@ class Game():
 		5 : Levels.level5Map,
 		6 : Levels.level6Map,
 		7 : Levels.level7Map,
-		8 : Levels.level8Map
+		8 : Levels.level8Map,
+		9 : Levels.level9Map,
+		10 : Levels.level10Map,
+		11 : Levels.level11Map
 		}
 		LevelsCar = {
 		1 : [],
@@ -34,7 +37,10 @@ class Game():
 		5 : [Car(surface, "res/car17.png", 220, 340, 30), Car(surface, "res/car18.png", 600, 230, 90), Car(surface, "res/car11.png", 400, 430, 12)],
 		6 : [Car(surface, "res/car15.png", 680, 420, 30)],
 		7 : [Car(surface, "res/car2.png", 260, 370, 4), Car(surface, "res/car4.png", 350, 370, 349), Car(surface, "res/car6.png", 510, 370, 14), Car(surface, "res/car16.png", 680, 370, 93), Car(surface, "res/car17.png", 260, 575, 18), Car(surface, "res/car17.png", 360, 575, 18), Car(surface, "res/car17.png", 460, 575, 18), Car(surface, "res/car17.png", 560, 575, 18), Car(surface, "res/car17.png", 660, 575, 18), Car(surface, "res/car17.png", 760, 575, 18)],
-		8 : [Car(surface, "res/car8.png", 560, 520, 11), Car(surface, "res/car9.png", 730, 520, 17), Car(surface, "res/car10.png", 700, 420, 35), Car(surface, "res/car11.png", 530, 420, 60), Car(surface, "res/car3.png", 610, 320, 85), Car(surface, "res/car4.png", 500, 300, 95), Car(surface, "res/car5.png", 420, 420, 104), Car(surface, "res/car18.png", 300, 420, 90), Car(surface, "res/car17.png", 180, 420, 90), Car(surface, "res/car17.png", 400, 310, 90), Car(surface, "res/car18.png", 280, 310, 90), Car(surface, "res/car16.png", 80, 380, 20)]
+		8 : [Car(surface, "res/car8.png", 560, 520, 11), Car(surface, "res/car9.png", 730, 520, 17), Car(surface, "res/car10.png", 700, 420, 35), Car(surface, "res/car11.png", 530, 420, 60), Car(surface, "res/car3.png", 610, 320, 85), Car(surface, "res/car4.png", 500, 300, 95), Car(surface, "res/car5.png", 420, 420, 104), Car(surface, "res/car18.png", 300, 420, 90), Car(surface, "res/car17.png", 180, 420, 90), Car(surface, "res/car17.png", 400, 310, 90), Car(surface, "res/car18.png", 280, 310, 90), Car(surface, "res/car16.png", 80, 380, 20)],
+		9 : [],
+		10 : [Car(surface, "res/car11.png", 450, 350, 4), Car(surface, "res/car12.png", 450, 480, -4), Car(surface, "res/car6.png", 460, 560, 86), Car(surface, "res/car5.png", 500, 240, -39)],
+		11 : [Car(surface, "res/car6.png", 150, 650, 5)]
 		}
 		ParkLoc = {
 		1 : Park(surface, 475, 324),
@@ -44,17 +50,23 @@ class Game():
 		5 : Park(surface, 700, 200),
 		6 : Park(surface, 50, 150),
 		7 : Park(surface, 400, 320),
-		8 : Park(surface, 100, 150)
+		8 : Park(surface, 100, 150),
+		9 : Park(surface, 310, 280),
+		10 : Park(surface, 550, 350),
+		11 : Park(surface, 730, 220)
 		}
 		Times = {
 		1 : 30,
 		2 : 60,
 		3 : 60,
-		4 : 75,
-		5 : 75,
-		6 : 90,
+		4 : 60,
+		5 : 60,
+		6 : 60,
 		7 : 60,
-		8 : 75
+		8 : 75,
+		9 : 75,
+		10 : 75,
+		11 : 75
 		}
 		self.carImg = open("files/car.txt").read().strip()
 		MainCar = {
@@ -65,7 +77,10 @@ class Game():
 		5 : Car(surface, self.carImg, surface.get_width()//2-50,surface.get_height()//2+300,0),
 		6 : Car(surface, self.carImg, 320, 500, 0),
 		7 : Car(surface, self.carImg, 850, 475, 0),
-		8 : Car(surface, self.carImg, 650, 630, 0)
+		8 : Car(surface, self.carImg, 650, 630, 0),
+		9 : Car(surface, self.carImg, 484, 700, 0),
+		10 : Car(surface, self.carImg, 180, 250, 0),
+		11 : Car(surface, self.carImg, 900, 650, 0)
 		}
 		self.parkSpot = ParkLoc[self.curLevel]
 		self.levelTime = Times[self.curLevel]
