@@ -1,4 +1,4 @@
-# Fast-and-Furious-Parking
+# fast-and-furious-parking
 Simple parking game with a challenge. 
 
 To install pygame:
